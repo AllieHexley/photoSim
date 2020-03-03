@@ -1,0 +1,15 @@
+% function to simulate photoreceptor responses in the real world
+% created by ACH 03/03/2020
+
+%% load illuminant spectra dataset from Psychtoolbox
+% reference: http://dx.doi.org/10.1364/OE.21.010393
+
+load('spd_houser.mat');
+plot(spd_houser(:,1));
+
+%% load reflectance spectra from the TM-30-15 standard
+
+ref = csvread('99Reflectances.csv');
+
+%% load the photoreceptor spectral sensitivites
+
