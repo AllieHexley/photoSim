@@ -45,166 +45,190 @@ for i=1:318
 end
 
 %% plot MacLeod Boynton space in traditional MacLeod Boynton space
-figure()
-subplot(2,2,1)
-plot(L(:),S(:),'x');
-xlabel('L/L+M');
-ylabel('S/L+M');
+plotAllPhotoSim(L,S,I,R);
 
-%% plot adapted MacLeod Boynton space in rod and mel space
-subplot(2,2,2)
-plot(R(:),I(:),'x');
-xlabel('R/L+M');
-ylabel('Mel/L+M');
-
-%% plot adapted MacLeod Boynton space in rod and mel space
-subplot(2,2,3)
-plot(L(:),I(:),'x');
-xlabel('L/L+M');
-ylabel('Mel/L+M');
-
-%% plot adapted MacLeod Boynton space in rod and mel space
-subplot(2,2,4)
-plot(I(:),S(:),'x');
-xlabel('Mel/L+M');
-ylabel('S/L+M');
-
-%% plot adapted MacLeod Boynton in 3D
-figure()
-scatter3(L(:),S(:),I(:),'x');
-xlabel('L/L+M');
-ylabel('S/L+M');
-zlabel('Mel/L+M');
-
-%% maybe label depending on the reflectance and spd
-spdLabels = readtable('318Illuminants_sampleTypes.csv','ReadVariableNames',false);
-
-refLabels = csvread('99Reflectances_sampleTypes.csv');
-refLabels = refLabels(1,:); %concatenate because reads in empty rows
-%1-nature,2-skin,3-textiles,4-paints,5-plastic,6-printed,7-color system
+%% label depending on the illuminant spectra
+[spdLabels, spdLabelsKeys, spdLabelsValues] = labelSpd;
+    
+%% label depending on the reflectance spectra
+[refLabels, refLabelsKeys] = labelRef;
 
 %% label plots with labels
+% plot depending on the illuminant spectra label
+figure()
+cols = [0.1,0.1,0.1;0.2,0.2,0.2;0.3,0.3,0.3;0.4,0.4,0.4;0.5,0.5,0.5;0.6,0.6,0.6;0.7,0.7,0.7;0.8,0.8,0.8;0.9,0.9,0.9;1,0.5,0;1,0.1,0.1;0.1,1,0.1;0.1,0.1,1;0.1,1,1;1,0.1,1;1,1,0.1];
+for m=1:16
+    subplot(2,1,1)
+    plot(L((spdLabelsKeys==m),:),I((spdLabelsKeys==m),:),'x','Color',cols(m,:));
+    hold on;
+end
+subplot(2,1,2)
+plot(L(:),I(:),'kx')
+
+% label daylight series
+figure()
+subplot(2,2,1)
+plot(L(:,refLabels==1),S(:,refLabels==1),'kx');
+hold on;
+plot(L((spdLabelsKeys>9),refLabels==1),S((spdLabelsKeys>9),refLabels==1),'bo');
+xlabel('L/L+M');
+ylabel('S/L+M');
+title('Natural Reflectance Spectra');
+
+subplot(2,2,2)
+plot(R(:,refLabels==1),I(:,refLabels==1),'kx');
+hold on;
+plot(R((spdLabelsKeys>9),refLabels==1),I((spdLabelsKeys>9),refLabels==1),'bo');
+xlabel('R/L+M');
+ylabel('Mel/L+M');
+title('Natural Reflectance Spectra');
+
+subplot(2,2,3)
+plot(L(:,refLabels==1),I(:,refLabels==1),'kx');
+hold on;
+plot(L((spdLabelsKeys>9),refLabels==1),I((spdLabelsKeys>9),refLabels==1),'bo');
+xlabel('L/L+M');
+ylabel('Mel/L+M');
+title('Natural Reflectance Spectra');
+
+subplot(2,2,4)
+plot(S(:,refLabels==1),I(:,refLabels==1),'kx');
+hold on;
+plot(S((spdLabelsKeys>9),refLabels==1),I((spdLabelsKeys>9),refLabels==1),'bo');
+xlabel('S/L+M');
+ylabel('Mel/L+M');
+title('Natural Reflectance Spectra');
+%% 
+
+%%
+
 % there is probably a better way to do this but this will do for now
 figure()
-for j=1:99
-    if refLabels(j)==1
-        figure(3)
-        scatter3(L(:,j),S(:,j),I(:,j),'kx');
-        hold on;
-        figure(4)
-        subplot(2,2,1)
-        plot(L(:,j),S(:,j),'kx');
-        hold on;
-        subplot(2,2,2)
-        plot(R(:,j),I(:,j),'kx');
-        hold on;
-        subplot(2,2,3)
-        plot(L(:,j),I(:,j),'kx');
-        hold on;
-        subplot(2,2,4)
-        plot(I(:,j),S(:,j),'kx');
-        hold on;
-    elseif refLabels(j)==2
-        figure(3)
-        scatter3(L(:,j),S(:,j),I(:,j),'bx');
-        hold on;
-                figure(4)
-        subplot(2,2,1)
-        plot(L(:,j),S(:,j),'bx');
-        hold on;
-        subplot(2,2,2)
-        plot(R(:,j),I(:,j),'bx');
-        hold on;
-        subplot(2,2,3)
-        plot(L(:,j),I(:,j),'bx');
-        hold on;
-        subplot(2,2,4)
-        plot(I(:,j),S(:,j),'bx');
-        hold on;
-    elseif refLabels(j)==3
-        figure(3)
-        scatter3(L(:,j),S(:,j),I(:,j),'rx');
-        hold on;
-                figure(4)
-        subplot(2,2,1)
-        plot(L(:,j),S(:,j),'rx');
-        hold on;
-        subplot(2,2,2)
-        plot(R(:,j),I(:,j),'rx');
-        hold on;
-        subplot(2,2,3)
-        plot(L(:,j),I(:,j),'rx');
-        hold on;
-        subplot(2,2,4)
-        plot(I(:,j),S(:,j),'rx');
-        hold on;
-    elseif refLabels(j)==4
-        figure(3)
-        scatter3(L(:,j),S(:,j),I(:,j),'gx');
-        hold on;
-                figure(4)
-        subplot(2,2,1)
-        plot(L(:,j),S(:,j),'gx');
-        hold on;
-        subplot(2,2,2)
-        plot(R(:,j),I(:,j),'gx');
-        hold on;
-        subplot(2,2,3)
-        plot(L(:,j),I(:,j),'gx');
-        hold on;
-        subplot(2,2,4)
-        plot(I(:,j),S(:,j),'gx');
-        hold on;
-    elseif refLabels(j)==5
-        figure(3)
-        scatter3(L(:,j),S(:,j),I(:,j),'cx');
-        hold on;
-                figure(4)
-        subplot(2,2,1)
-        plot(L(:,j),S(:,j),'cx');
-        hold on;
-        subplot(2,2,2)
-        plot(R(:,j),I(:,j),'cx');
-        hold on;
-        subplot(2,2,3)
-        plot(L(:,j),I(:,j),'cx');
-        hold on;
-        subplot(2,2,4)
-        plot(I(:,j),S(:,j),'cx');
-        hold on;
-    elseif refLabels(j)==6
-        figure(3)
-        scatter3(L(:,j),S(:,j),I(:,j),'mx');
-        hold on;
-                figure(4)
-        subplot(2,2,1)
-        plot(L(:,j),S(:,j),'mx');
-        hold on;
-        subplot(2,2,2)
-        plot(R(:,j),I(:,j),'mx');
-        hold on;
-        subplot(2,2,3)
-        plot(L(:,j),I(:,j),'mx');
-        hold on;
-        subplot(2,2,4)
-        plot(I(:,j),S(:,j),'mx');
-        hold on;
-    else
-        figure(3)
-        scatter3(L(:,j),S(:,j),I(:,j),'yx');
-        hold on;
-                figure(4)
-        subplot(2,2,1)
-        plot(L(:,j),S(:,j),'yx');
-        hold on;
-        subplot(2,2,2)
-        plot(R(:,j),I(:,j),'yx');
-        hold on;
-        subplot(2,2,3)
-        plot(L(:,j),I(:,j),'yx');
-        hold on;
-        subplot(2,2,4)
-        plot(I(:,j),S(:,j),'yx');
-        hold on;
-    end
-end
+scatter3(L(:),S(:),I(:),'rx');
+hold on;
+scatter3(L(spdLabelsKeys>9),S(spdLabelsKeys>9),I(spdLabelsKeys>9),'bo');
+
+% %%
+% 
+% for j=1:99
+%     if refLabels(j)==1
+%         figure(3)
+%         scatter3(L(:,j),S(:,j),I(:,j),'kx');
+%         hold on;
+%         figure(4)
+%         subplot(2,2,1)
+%         plot(L(:,j),S(:,j),'kx');
+%         hold on;
+%         subplot(2,2,2)
+%         plot(R(:,j),I(:,j),'kx');
+%         hold on;
+%         subplot(2,2,3)
+%         plot(L(:,j),I(:,j),'kx');
+%         hold on;
+%         subplot(2,2,4)
+%         plot(I(:,j),S(:,j),'kx');
+%         hold on;
+%     elseif refLabels(j)==2
+%         figure(3)
+%         scatter3(L(:,j),S(:,j),I(:,j),'bx');
+%         hold on;
+%         figure(4)
+%         subplot(2,2,1)
+%         plot(L(:,j),S(:,j),'bx');
+%         hold on;
+%         subplot(2,2,2)
+%         plot(R(:,j),I(:,j),'bx');
+%         hold on;
+%         subplot(2,2,3)
+%         plot(L(:,j),I(:,j),'bx');
+%         hold on;
+%         subplot(2,2,4)
+%         plot(I(:,j),S(:,j),'bx');
+%         hold on;
+%     elseif refLabels(j)==3
+%         figure(3)
+%         scatter3(L(:,j),S(:,j),I(:,j),'rx');
+%         hold on;
+%                 figure(4)
+%         subplot(2,2,1)
+%         plot(L(:,j),S(:,j),'rx');
+%         hold on;
+%         subplot(2,2,2)
+%         plot(R(:,j),I(:,j),'rx');
+%         hold on;
+%         subplot(2,2,3)
+%         plot(L(:,j),I(:,j),'rx');
+%         hold on;
+%         subplot(2,2,4)
+%         plot(I(:,j),S(:,j),'rx');
+%         hold on;
+%     elseif refLabels(j)==4
+%         figure(3)
+%         scatter3(L(:,j),S(:,j),I(:,j),'gx');
+%         hold on;
+%                 figure(4)
+%         subplot(2,2,1)
+%         plot(L(:,j),S(:,j),'gx');
+%         hold on;
+%         subplot(2,2,2)
+%         plot(R(:,j),I(:,j),'gx');
+%         hold on;
+%         subplot(2,2,3)
+%         plot(L(:,j),I(:,j),'gx');
+%         hold on;
+%         subplot(2,2,4)
+%         plot(I(:,j),S(:,j),'gx');
+%         hold on;
+%     elseif refLabels(j)==5
+%         figure(3)
+%         scatter3(L(:,j),S(:,j),I(:,j),'cx');
+%         hold on;
+%                 figure(4)
+%         subplot(2,2,1)
+%         plot(L(:,j),S(:,j),'cx');
+%         hold on;
+%         subplot(2,2,2)
+%         plot(R(:,j),I(:,j),'cx');
+%         hold on;
+%         subplot(2,2,3)
+%         plot(L(:,j),I(:,j),'cx');
+%         hold on;
+%         subplot(2,2,4)
+%         plot(I(:,j),S(:,j),'cx');
+%         hold on;
+%     elseif refLabels(j)==6
+%         figure(3)
+%         scatter3(L(:,j),S(:,j),I(:,j),'mx');
+%         hold on;
+%                 figure(4)
+%         subplot(2,2,1)
+%         plot(L(:,j),S(:,j),'mx');
+%         hold on;
+%         subplot(2,2,2)
+%         plot(R(:,j),I(:,j),'mx');
+%         hold on;
+%         subplot(2,2,3)
+%         plot(L(:,j),I(:,j),'mx');
+%         hold on;
+%         subplot(2,2,4)
+%         plot(I(:,j),S(:,j),'mx');
+%         hold on;
+%     else
+%         figure(3)
+%         scatter3(L(:,j),S(:,j),I(:,j),'yx');
+%         hold on;
+%                 figure(4)
+%         subplot(2,2,1)
+%         plot(L(:,j),S(:,j),'yx');
+%         hold on;
+%         subplot(2,2,2)
+%         plot(R(:,j),I(:,j),'yx');
+%         hold on;
+%         subplot(2,2,3)
+%         plot(L(:,j),I(:,j),'yx');
+%         hold on;
+%         subplot(2,2,4)
+%         plot(I(:,j),S(:,j),'yx');
+%         hold on;
+%     end
+% end
