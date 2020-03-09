@@ -2,6 +2,8 @@
 % function to plot real world spectra in adapted MacLeod-Boynton
 % (unlabelled)
 
+% to do - add in covariance and fits to each plot
+
 function [] = plotAllPhotoSim(L,S,I,R);
 
 figure()
