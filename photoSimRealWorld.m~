@@ -65,58 +65,31 @@ plotAllPhotoSim(L,S,I,R);
 
 %% find correlations
 figure()
-subplot(3,2,1)
+subplot(2,2,1)
 plot(L(:),S(:),'x');
 xlabel('L/L+M');
 ylabel('S/L+M');
 [r,p]=corrcoef([Lcf,Icf]);
-text(0.65,0.9,['R=' num2str(r(2))]);
-text(0.65,0.8,['p=' num2str(p(2))]);
+text(0.7,0.9,num2str(r(2)));
+text(0.7,0.8,num2str(p));
 
 %% plot adapted MacLeod Boynton space in rod and mel space
-subplot(3,2,2)
+subplot(2,2,2)
 plot(R(:),I(:),'x');
 xlabel('R/L+M');
 ylabel('Mel/L+M');
-[r,p]=corrcoef([Rcf,Icf]);
-text(0.2,0.9,['R=' num2str(r(2))]);
-text(0.2,0.8,['p=' num2str(p(2))]);
 
 %% plot adapted MacLeod Boynton space in rod and mel space
-subplot(3,2,3)
+subplot(2,2,3)
 plot(L(:),I(:),'x');
 xlabel('L/L+M');
 ylabel('Mel/L+M');
-[r,p]=corrcoef([Lcf,Icf]);
-text(0.65,0.9,['R=' num2str(r(2))]);
-text(0.65,0.8,['p=' num2str(p(2))]);
 
 %% plot adapted MacLeod Boynton space in rod and mel space
-subplot(3,2,4)
+subplot(2,2,4)
 plot(I(:),S(:),'x');
 xlabel('Mel/L+M');
 ylabel('S/L+M');
-[r,p]=corrcoef([Icf,Scf]);
-text(0.2,0.9,['R=' num2str(r(2))]);
-text(0.2,0.8,['p=' num2str(p(2))]);
-
-%% plot adapted MacLeod Boynton space in rod and mel space
-subplot(3,2,5)
-plot(L(:),M(:),'x');
-xlabel('L/L+M');
-ylabel('M/L+M');
-[r,p]=corrcoef([Lcf,Mcf]);
-text(0.65,0.55,['R=' num2str(r(2))]);
-text(0.65,0.5,['p=' num2str(p(2))]);
-
-%% plot adapted MacLeod Boynton space in rod and mel space
-subplot(3,2,6)
-plot(L(:),R(:),'x');
-xlabel('L/L+M');
-ylabel('Rod/L+M');
-[r,p]=corrcoef([Lcf,Rcf]);
-text(0.65,0.9,['R=' num2str(r(2))]);
-text(0.65,0.8,['p=' num2str(p(2))]);
 
 %% plot histograms of photoreceptor responses in natural world not normalised
 figure()
