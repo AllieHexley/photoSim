@@ -1,0 +1,175 @@
+% created by ACH 26/03/2020
+% function to plot the correlations of L,M,S,R and I activity
+
+% define parameters
+numSpd = 401;
+numRef = 99;
+numObs = numSpd*numRef;
+
+%% load illuminant spectra dataset from Psychtoolbox
+% reference: http://dx.doi.org/10.1364/OE.21.010393
+
+spd = csvread('401Illuminants.csv');
+wlsSpd = spd(:,1);
+% cols are different illuminants, rows are diff wavelengths
+spd = spd(:,2:end);
+
+%% load reflectance spectra from the TM-30-15 standard
+
+ref = csvread('99Reflectances.csv');
+wlsRef = ref(:,1);
+% resample to match the spectra
+ref = ref(1:5:401,2:end);
+
+%% load the photoreceptor spectral sensitivites
+% [S,M,L,Rod,Mel]
+[T_cies026, S_cies026] = GetCIES026;
+wlsCIES026 = (380:5:780)';
+% remove Nans
+T_cies026(isnan(T_cies026)) = 0;
+% resample to match the spectra
+T_cies026 = T_cies026(:,1:5:401);
+
+%% calculate the real world photoreceptor responses
+
+for i=1:numSpd
+    for j=1:numRef
+        for k=1:5
+            photosim(i,j,k)=T_cies026(k,:)*(ref(:,j).*spd(:,i));
+        end
+    end
+end
+
+%% remove Nans
+photosim(isnan(photosim))=0;
+
+%% reshape to single vector - rework this into function laters
+% individual activations
+L = reshape(photosim(:,:,3),[numObs,1]);
+S = reshape(photosim(:,:,1),[numObs,1]);
+I = reshape(photosim(:,:,5),[numObs,1]);
+M = reshape(photosim(:,:,2),[numObs,1]);
+R = reshape(photosim(:,:,4),[numObs,1]);
+% photoreceptor responses matrix prm
+prm = [S,M,L,R,I];
+
+%% plot correlations
+figure()
+% histograms
+subplot(5,5,13)
+histogram(L,'FaceColor','r');
+xlabel('L');
+subplot(5,5,7)
+histogram(M,'FaceColor','g');
+xlabel('M');
+subplot(5,5,1)
+histogram(S,'FaceColor','b');
+xlabel('S');
+subplot(5,5,19)
+histogram(R,'FaceColor','c');
+xlabel('R');
+subplot(5,5,25)
+histogram(I,'FaceColor','m');
+xlabel('I');
+
+% correlations for S
+subplot(5,5,6)
+plot(S,M,'b.');
+xlabel('S');
+ylabel('M');
+[r,p]=corrcoef([S,M]);
+txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
+text(6,0.9,txt);
+
+subplot(5,5,11)
+plot(S,L,'b.');
+xlabel('S');
+ylabel('L');
+[r,p]=corrcoef([S,L]);
+txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
+text(6,0.9,txt);
+
+subplot(5,5,16)
+plot(S,R,'b.');
+xlabel('S');
+ylabel('R');
+[r,p]=corrcoef([S,R]);
+txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
+text(6,0.9,txt);
+
+subplot(5,5,21)
+plot(S,I,'b.');
+xlabel('S');
+ylabel('I');
+[r,p]=corrcoef([S,I]);
+txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
+text(6,0.9,txt);
+
+% for M
+
+subplot(5,5,2)
+plot(M,S,'g.');
+xlabel('M');
+ylabel('S');
+[r,p]=corrcoef([S,M]);
+txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
+text(6,0.9,txt);
+
+subplot(5,5,12)
+plot(M,L,'g.');
+xlabel('M');
+ylabel('L');
+[r,p]=corrcoef([M,L]);
+txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
+text(6,0.9,txt);
+
+subplot(5,5,17)
+plot(M,R,'g.');
+xlabel('M');
+ylabel('R');
+[r,p]=corrcoef([M,R]);
+txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
+text(6,0.9,txt);
+
+subplot(5,5,22)
+plot(M,I,'g.');
+xlabel('M');
+ylabel('I');
+[r,p]=corrcoef([M,I]);
+txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
+text(6,0.9,txt);
+
+% for L
+% for M
+
+subplot(5,5,3)
+plot(L,S,'r.');
+xlabel('L');
+ylabel('S');
+[r,p]=corrcoef([L,M]);
+txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
+text(6,0.9,txt);
+
+subplot(5,5,8)
+plot(L,M,'r.');
+xlabel('L');
+ylabel('M');
+[r,p]=corrcoef([M,L]);
+txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
+text(6,0.9,txt);
+
+subplot(5,5,18)
+plot(L,R,'r.');
+xlabel('L');
+ylabel('R');
+[r,p]=corrcoef([L,R]);
+txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
+text(6,0.9,txt);
+
+subplot(5,5,23)
+plot(L,I,'r.');
+xlabel('L');
+ylabel('I');
+[r,p]=corrcoef([M,I]);
+txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
+text(6,0.9,txt);
