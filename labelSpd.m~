@@ -1,7 +1,7 @@
 % created by ACH 05/03/2020
 % function to label the illuminant spectra for the photosim project
 
-function [spdLabels, spdLabelsValues] = labelSpd;
+function [spdLabels, spdLabelsKeys, spdLabelsValues] = labelSpd;
 
 spdLabels = readtable('401Illuminants_sampleTypes.csv','ReadVariableNames',false);
 spdLabels = table2cell(spdLabels);

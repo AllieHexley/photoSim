@@ -1,30 +1,42 @@
 % function to simulate photoreceptor responses in the real world
 % created by ACH 03/03/2020
 
+clear all;
+clc;
+
+% define parameters
+numSpd = 401;
+numRef = 99;
+numObs = numSpd*numRef;
+
 %% load illuminant spectra dataset from Psychtoolbox
 % reference: http://dx.doi.org/10.1364/OE.21.010393
 
-spd = csvread('318Illuminants.csv');
+spd = csvread('401Illuminants.csv');
 wlsSpd = spd(:,1);
+% cols are different illuminants, rows are diff wavelengths
 spd = spd(:,2:end);
 
 %% load reflectance spectra from the TM-30-15 standard
 
 ref = csvread('99Reflectances.csv');
 wlsRef = ref(:,1);
-ref = ref(:,2:end);
+% resample to match the spectra
+ref = ref(1:5:401,2:end);
 
 %% load the photoreceptor spectral sensitivites
 % [S,M,L,Rod,Mel]
 [T_cies026, S_cies026] = GetCIES026;
-wlsCIES026 = (380:1:780)';
+wlsCIES026 = (380:5:780)';
 % remove Nans
 T_cies026(isnan(T_cies026)) = 0;
+% resample to match the spectra
+T_cies026 = T_cies026(:,1:5:401);
 
 %% calculate the real world photoreceptor responses
 
-for i=1:318
-    for j=1:99
+for i=1:numSpd
+    for j=1:numRef
         for k=1:5
             photosim(i,j,k)=T_cies026(k,:)*(ref(:,j).*spd(:,i));
         end
@@ -35,33 +47,160 @@ end
 photosim(isnan(photosim))=0;
 
 %% calculate MacLeod Boynton responses (all variables are X/L+M)
-for i=1:318
-    for j=1:99
-        L(i,j) = photosim(i,j,3)./((photosim(i,j,3)+photosim(i,j,2)));
-        M(i,j) = photosim(i,j,2)./((photosim(i,j,3)+photosim(i,j,2)));
-        S(i,j) = photosim(i,j,1)./((photosim(i,j,3)+photosim(i,j,2)));
-        R(i,j) = photosim(i,j,4)./((photosim(i,j,3)+photosim(i,j,2)));
-        I(i,j) = photosim(i,j,5)./((photosim(i,j,3)+photosim(i,j,2)));
+for i=1:numSpd
+    for j=1:numRef
+        Lnorm(i,j) = photosim(i,j,3)./((photosim(i,j,3)+photosim(i,j,2)));
+        Mnorm(i,j) = photosim(i,j,2)./((photosim(i,j,3)+photosim(i,j,2)));
+        Snorm(i,j) = photosim(i,j,1)./((photosim(i,j,3)+photosim(i,j,2)));
+        Rnorm(i,j) = photosim(i,j,4)./((photosim(i,j,3)+photosim(i,j,2)));
+        Inorm(i,j) = photosim(i,j,5)./((photosim(i,j,3)+photosim(i,j,2)));
     end
 end
 
+%% reshape to single vector - rework this into function laters
+% individual activations
+L = reshape(photosim(:,:,3),[numObs,1]);
+S = reshape(photosim(:,:,1),[numObs,1]);
+I = reshape(photosim(:,:,5),[numObs,1]);
+M = reshape(photosim(:,:,2),[numObs,1]);
+R = reshape(photosim(:,:,4),[numObs,1]);
+% photoreceptor responses matrix prm
+prm = [S;M;L;R;I];
+
+% Macleod-Boynton activations
+Lmb = reshape(Lnorm,[numObs,1]);
+Smb = reshape(Snorm,[numObs,1]);
+Imb = reshape(Inorm,[numObs,1]);
+Mmb = reshape(Mnorm,[numObs,1]);
+Rmb = reshape(Rnorm,[numObs,1]);
+% macleod-boynton matrix - mbm
+mbm = [Smb;Mmb;Lmb;Rmb;Imb];
+
+%% tidy up a bit
+clear i j k 
+
+%% add in spectral locus
+% this will be for EEW so need to do this for each individual wavelength to
+% get full locus
+% set up spectral locus vector
+slSPD = zeros(81,81);
+for ii=1:81
+    slSPD(ii,ii) = 1;
+end;
+% calculate spectral locus in L,M,S,R,I coordinate space
+% remove Nans
+spectralLocus(isnan(spectralLocus))=0;
+for m=1:81
+    for k=1:5
+        spectralLocus(m,k)=T_cies026(k,:)*(slSPD(:,m));
+    end
+end
+
+%% calculate macleod boynton of spectral locus
+% for all need to shift so starts at 390 or else will reach infintiy
+for n=1:81
+    Lsl(n) = spectralLocus(n,3)./((spectralLocus(n,3)+spectralLocus(n,2)));
+    Msl(n) = spectralLocus(n,2)./((spectralLocus(n,3)+spectralLocus(n,2)));
+    Ssl(n) = spectralLocus(n,1)./((spectralLocus(n,3)+spectralLocus(n,2)));
+    Rsl(n) = spectralLocus(n,4)./((spectralLocus(n,3)+spectralLocus(n,2)));
+    Isl(n) = spectralLocus(n,5)./((spectralLocus(n,3)+spectralLocus(n,2)));
+end
+Lsl(isnan(Lsl))=0;
+Msl(isnan(Msl))=0;
+Ssl(isnan(Ssl))=0;
+Ssl = Ssl./(max(Ssl));
+Rsl(isnan(Rsl))=0;
+Isl(isnan(Isl))=0;
+%% plot spectral locus alone
+figure()
+subplot(2,2,1)
+plot(Lsl(:),Ssl(:),'ro');
+xlabel('L/L+M');
+ylabel('S/L+M');
+
+%% plot adapted MacLeod Boynton space in rod and mel space
+subplot(2,2,2)
+plot(Rsl(:),Isl(:),'ro');
+xlabel('R/L+M');
+ylabel('Mel/L+M');
+
+%% plot adapted MacLeod Boynton space in rod and mel space
+subplot(2,2,3)
+plot(Lsl(:),Isl(:),'ro');
+xlabel('L/L+M');
+ylabel('Mel/L+M');
+
+%% plot adapted MacLeod Boynton space in rod and mel space
+subplot(2,2,4)
+plot(Isl(:),Ssl(:),'ro');
+xlabel('Mel/L+M');
+ylabel('S/L+M');
+
+%% plot adapted MacLeod Boynton in 3D
+figure()
+scatter3(Lsl(:),Ssl(:),Isl(:),'ro');
+xlabel('L/L+M');
+ylabel('S/L+M');
+zlabel('Mel/L+M');
+
+%% plot spectral locus with real world spectra
+% try to plot range of illuminants with the perfect reflectance spectra
+figure()
+subplot(2,2,1)
+plot(Lmb(:),Smb(:),'x');
+hold on;
+plot(Lsl(:),Ssl(:),'ro');
+xlabel('L/L+M');
+ylabel('S/L+M');
+
+%% plot adapted MacLeod Boynton space in rod and mel space
+subplot(2,2,2)
+plot(R(:),I(:),'x');
+xlabel('R/L+M');
+ylabel('Mel/L+M');
+
+%% plot adapted MacLeod Boynton space in rod and mel space
+subplot(2,2,3)
+plot(L(:),I(:),'x');
+xlabel('L/L+M');
+ylabel('Mel/L+M');
+
+%% plot adapted MacLeod Boynton space in rod and mel space
+subplot(2,2,4)
+plot(I(:),S(:),'x');
+xlabel('Mel/L+M');
+ylabel('S/L+M');
+
+%% plot adapted MacLeod Boynton in 3D
+figure()
+scatter3(L(:),S(:),I(:),'x');
+xlabel('L/L+M');
+ylabel('S/L+M');
+zlabel('Mel/L+M');
+
+
+%% do daylight locus assuming perfect reflectance spectra to start
+
+%% then do daylight with actual reflectance spectra
+
+%% then do all illuminants with perfect reflectance spectra
+
+%% then do all illuminants with actual reflectance spectra
+
+%% plot MacLeod Boynton space in traditional MacLeod Boynton space
+plotAllPhotoSim(Lmb,Smb,Imb,Rmb);
+
+%% add in daylight locus
+
+%% plot individual activation correlations
+figure()
+plot(I,I,'x');
+
 %% label depending on the illuminant spectra
-[spdLabels, spdLabelsKeys, spdLabelsValues] = labelSpd;
+[spdLabels, spdLabelsValues] = labelSpd;
     
 %% label depending on the reflectance spectra
 [refLabels, refLabelsKeys] = labelRef;
-
-%%
-numObs = 318*99;
-
-Lcf = reshape(L,[numObs,1]);
-Scf = reshape(S,[numObs,1]);
-Icf = reshape(I,[numObs,1]);
-Mcf = reshape(M,[numObs,1]);
-Rcf = reshape(R,[numObs,1]);
-
-%% plot MacLeod Boynton space in traditional MacLeod Boynton space
-plotAllPhotoSim(L,S,I,R);
 
 %% find correlations
 figure()
