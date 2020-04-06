@@ -54,23 +54,30 @@ R = reshape(photosim(:,:,4),[numObs,1]);
 prm = [S,M,L,R,I];
 
 %% plot correlations
-figure()
+
+figure('DefaultAxesFontSize',18)
+set(0,'DefaultTextFontSize',14);
 % histograms
 subplot(5,5,13)
 histogram(L,'FaceColor','r');
 xlabel('L');
+ylabel('');
 subplot(5,5,7)
 histogram(M,'FaceColor','g');
 xlabel('M');
+ylabel('');
 subplot(5,5,1)
 histogram(S,'FaceColor','b');
 xlabel('S');
+ylabel('');
 subplot(5,5,19)
 histogram(R,'FaceColor','c');
 xlabel('R');
+ylabel('');
 subplot(5,5,25)
 histogram(I,'FaceColor','m');
 xlabel('I');
+ylabel('');
 
 % correlations for S
 subplot(5,5,6)
@@ -187,7 +194,7 @@ subplot(5,5,9)
 plot(R,M,'c.');
 xlabel('R');
 ylabel('M');
-[r,p]=corrcoef([R,L]);
+[r,p]=corrcoef([R,M]);
 txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
 text(6,0.9,txt);
 
@@ -221,7 +228,7 @@ subplot(5,5,10)
 plot(I,M,'m.');
 xlabel('I');
 ylabel('M');
-[r,p]=corrcoef([I,L]);
+[r,p]=corrcoef([I,M]);
 txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
 text(6,0.9,txt);
 
@@ -229,7 +236,7 @@ subplot(5,5,15)
 plot(I,L,'m.');
 xlabel('I');
 ylabel('L');
-[r,p]=corrcoef([I,R]);
+[r,p]=corrcoef([I,L]);
 txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
 text(6,0.9,txt);
 
@@ -240,3 +247,40 @@ ylabel('R');
 [r,p]=corrcoef([R,I]);
 txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
 text(6,0.9,txt);
+
+%% heatmap of correlations
+[r,p]=corrcoef([S,M]);
+rsm = r(2);
+rss = r(1);
+[r,p]=corrcoef([S,L]);
+rsl = r(2);
+[r,p]=corrcoef([S,R]);
+rsr = r(2);
+[r,p]=corrcoef([S,I]);
+rsi = r(2);
+[r,p]=corrcoef([M,L]);
+rml = r(2);
+rmm = r(1);
+[r,p]=corrcoef([M,R]);
+rmr = r(2);
+[r,p]=corrcoef([M,I]);
+rmi = r(2);
+[r,p]=corrcoef([L,R]);
+rlr = r(2);
+rll = r(1);
+[r,p]=corrcoef([L,I]);
+rli = r(2);
+[r,p]=corrcoef([R,I]);
+rri = r(2);
+rrr = r(1);
+rii = r(1);
+
+T = [rss,rsm,rsl,rsr,rsi;rsm,rmm,rml,rmr,rmi;rsl,rml,rll,rlr,rli;rsr,rmr,rlr,rrr,rri;rsi,rmi,rli,rri,rii];
+% T.Properties.VariableNames = {'S','M','L','Rod','Mel'};
+% T.Properties.RowNames = {'S','M','L','Rod','Mel'};
+xvals = {'S','M','L','Rod','Mel'};
+figure('DefaultAxesFontSize',18)
+set(0,'DefaultTextFontSize',18);
+h = heatmap(xvals,xvals,T,'FontSize',18);
+
+

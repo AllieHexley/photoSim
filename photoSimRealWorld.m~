@@ -80,63 +80,88 @@ mbm = [Smb;Mmb;Lmb;Rmb;Imb];
 clear i j k 
 
 %% add in spectral locus
-% this will be for EEW so need to do this for each individual wavelength to
-% get full locus
-% set up spectral locus vector
-slSPD = zeros(81,81);
-for ii=1:81
+%% load the photoreceptor spectral sensitivites
+% [S,M,L,Rod,Mel]
+[T_cies026, S_cies026] = GetCIES026;
+wlsCIES026 = (390:1:780)';
+% rescale only over range where we have cone fundmanetals i.e. 390nm:780nm
+T_cies026 = T_cies026(:,11:end);
+% remove Nans
+T_cies026(isnan(T_cies026)) = 0;
+
+%% simulate spectral locus
+slSPD = zeros(391,391);
+for ii=1:391
     slSPD(ii,ii) = 1;
 end;
-% calculate spectral locus in L,M,S,R,I coordinate space
 
-for m=1:81
+% calculate spectral locus in L,M,S,R,I coordinate space
+for m=1:391
     for k=1:5
         spectralLocus(m,k)=T_cies026(k,:)*(slSPD(:,m));
     end
 end
+% remove Nans
+spectralLocus(isnan(spectralLocus))=0;
 
 %% calculate macleod boynton of spectral locus
-for n=1:81
-    Lnorm(i,j) = photosim(i,j,3)./((photosim(i,j,3)+photosim(i,j,2)));
-    Mnorm(i,j) = photosim(i,j,2)./((photosim(i,j,3)+photosim(i,j,2)));
-    Snorm(i,j) = photosim(i,j,1)./((photosim(i,j,3)+photosim(i,j,2)));
-        Rnorm(i,j) = photosim(i,j,4)./((photosim(i,j,3)+photosim(i,j,2)));
-        Inorm(i,j) = photosim(i,j,5)./((photosim(i,j,3)+photosim(i,j,2)));
+% for all need to shift so starts at 390 or else will reach infintiy
+for n=1:391
+    Lsl(n) = spectralLocus(n,3)./((spectralLocus(n,3)+spectralLocus(n,2)));
+    Msl(n) = spectralLocus(n,2)./((spectralLocus(n,3)+spectralLocus(n,2)));
+    Ssl(n) = spectralLocus(n,1)./((spectralLocus(n,3)+spectralLocus(n,2)));
+    Rsl(n) = spectralLocus(n,4)./((spectralLocus(n,3)+spectralLocus(n,2)));
+    Isl(n) = spectralLocus(n,5)./((spectralLocus(n,3)+spectralLocus(n,2)));
 end
 
-%% plot spectral locus
+%% normalise S, R, and I to unity
+Ssl = Ssl./(max(Ssl));
+Rsl = Rsl./(max(Rsl));
+Isl = Isl./(max(Isl));
+%% plot spectral locus with real world spectra
+% try to plot range of illuminants with the perfect reflectance spectra
 figure()
 subplot(2,2,1)
 plot(Lmb(:),Smb(:),'x');
 hold on;
-plot(
+plot(Lsl(:),Ssl(:),'ro');
 xlabel('L/L+M');
 ylabel('S/L+M');
 
 %% plot adapted MacLeod Boynton space in rod and mel space
 subplot(2,2,2)
-plot(R(:),I(:),'x');
+plot(Rmb(:),Imb(:),'x');
+hold on;
+plot(Rsl(:),Isl(:),'ro');
 xlabel('R/L+M');
 ylabel('Mel/L+M');
 
 %% plot adapted MacLeod Boynton space in rod and mel space
 subplot(2,2,3)
-plot(L(:),I(:),'x');
+plot(Lmb(:),Imb(:),'x');
+hold on;
+plot(Lsl(:),Isl(:),'ro');
 xlabel('L/L+M');
 ylabel('Mel/L+M');
 
 %% plot adapted MacLeod Boynton space in rod and mel space
 subplot(2,2,4)
-plot(I(:),S(:),'x');
+plot(Imb(:),Smb(:),'x');
+hold on;
+plot(Isl(:),Ssl(:),'ro');
 xlabel('Mel/L+M');
 ylabel('S/L+M');
 
 %% plot adapted MacLeod Boynton in 3D
 figure()
-scatter3(L(:),S(:),I(:),'x');
+scatter3(Lmb(:),Smb(:),Imb(:),'x');
+hold on;
+scatter3(Lsl(:),Ssl(:),Isl(:),'ro');
 xlabel('L/L+M');
 ylabel('S/L+M');
 zlabel('Mel/L+M');
+
+%% only plot for 
 
 
 %% do daylight locus assuming perfect reflectance spectra to start
@@ -148,13 +173,9 @@ zlabel('Mel/L+M');
 %% then do all illuminants with actual reflectance spectra
 
 %% plot MacLeod Boynton space in traditional MacLeod Boynton space
-plotAllPhotoSim(Lmb,Smb,Imb,Rmb);
+%plotAllPhotoSim(Lmb,Smb,Imb,Rmb);
 
 %% add in daylight locus
-
-%% plot individual activation correlations
-figure()
-plot(I,I,'x');
 
 %% label depending on the illuminant spectra
 [spdLabels, spdLabelsValues] = labelSpd;
