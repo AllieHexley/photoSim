@@ -167,10 +167,10 @@ xlabel('Mel/L+M');
 ylabel('S/L+M');
 
 %% plot adapted MacLeod Boynton in 3D
-figure('DefaultAxesFontSize',18)
-set(0,'DefaultTextFontSize',12);
+figure('DefaultAxesFontSize',18,'DefaultTextFontSize',12);
 plot3(Lsl(:),Ssl(:),Isl(:),'r-');
 hold on;
+grid on;
 plot3(Lsl(1:10:end),Ssl(1:10:end),Isl(1:10:end),'k.');
 c=1;
 for i=11:50:261;
@@ -359,6 +359,7 @@ figure('DefaultAxesFontSize',18)
 set(0,'DefaultTextFontSize',12);
 plot3(Lsl(:),Ssl(:),Isl(:),'r-');
 hold on;
+grid on;
 plot3(Lsl(1:10:end),Ssl(1:10:end),Isl(1:10:end),'k.');
 c=1;
 for i=11:50:261;

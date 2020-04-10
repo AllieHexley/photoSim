@@ -1,0 +1,26 @@
+% created by ACH 09/04/2020
+% script to normalize illuminant spd so integral under illuminant spd = 1;
+% as in delta functions which model the spectral locus
+
+spd = csvread('401Illuminants.csv');
+wlsSpd = spd(:,1);
+% cols are different illuminants, rows are diff wavelengths
+spd = spd(:,2:end);
+
+%function normSpd = normIlluminantSpd(spd, wlsSpd)
+
+for i=1:size(spd,2)
+    % calculate integral of illuminant spectra
+    A(i) = trapz(wlsSpd, spd(:,i);
+    normSpd(:,i) = spd(:,i)./A(i);
+    
+
+subplot(1,2,1)
+plot(wlsSpd,spd(:,1),'x')
+A = trapz(wlsSpd, spd(:,1));
+normSpd = spd(:,1)./A;
+subplot(1,2,2)
+plot(wlsSpd,normSpd,'x')
+B = trapz(wlsSpd,normSpd)
+
+%end
