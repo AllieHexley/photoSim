@@ -42,10 +42,12 @@ title('VLambda check');
 % now calculate chromaticity coordinates
 lmb = (cl.*l)./vLambda;
 mmb = (cm.*m)./vLambda;
-smb = (cs.*s)./vLambda;
+%smb = (cs.*s)./vLambda;
+smb = s./vLambda;
+smb = smb./max(smb);
 
 % plot chromaticity coordinates
-figure
+figure(5)
 plot(wlsCIES026, lmb, 'r');
 hold on;
 plot(wlsCIES026, mmb, 'g');
@@ -63,8 +65,47 @@ plot(wlsCIES026, mbSS(1:391,4), 'k--');
 lCoord = lmb./(lmb+mmb);
 sCoord = smb./(lmb+mmb);
 
-% plot chromaticity coordinates
+% try to caluclate melanopsin coordinate
+imb = i./vLambda;
+imb = imb./(max(imb));
+plot(wlsCIES026, imb, 'm');
+
+% calcualte melanopsin coord
+iCoord = imb./(lmb+mmb);
+
+% plot i vs V(lambda)
+figure()
+plot(i,vLambda,'x');
+
+%% plot chromaticity coordinates
 figure
+subplot(1,2,1);
 plot(lCoord, sCoord, 'k');
 title('Traditional MacLeod Boynton Space');
+xlabel('L/L+M');
+ylabel('S/L+M');
+subplot(1,2,2)
+plot(lCoord, iCoord, 'k');
+title('Adapted MacLeod Boynton Space');
+xlabel('L/L+M');
+ylabel('I/L+M');
 
+figure
+plot3(lCoord,sCoord,iCoord,'k-')
+xlabel('L/L+M');
+ylabel('S/L+M');
+zlabel('I/L+M');
+
+%% now try to calculate rod coord assume rod coord is scotopic V(lambda) and check this later
+figure()
+plot(wlsCIES026,r)
+
+% luminous effiiency constants in lm/W
+photopic = 683;
+scotopic = 1700;
+
+% scale so scotopic function is ratio greater than photopic
+rmb = (scotopic./photopic);
+
+figure(5)
+plot(wlsCIES026, rmb, 'k')
