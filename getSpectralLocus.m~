@@ -1,0 +1,42 @@
+% created by ACH 09/04/2020
+% script to get the spectral locus
+
+% load the photoreceptor spectral sensitivites
+% [S,M,L,Rod,Mel]
+[T_cies026, S_cies026] = GetCIES026;
+wlsCIES026 = (390:1:780)';
+% rescale only over range where we have cone fundmanetals i.e. 390nm:780nm
+% scale for spds with 1nm spacing
+T_cies026_1nm = T_cies026(:,11:end);
+% remove Nans
+T_cies026_1nm(isnan(T_cies026_1nm)) = 0;
+% scale for spds with 5nm spacing
+T_cies026_5nm = T_cies026(:,11:5:end);
+% remove Nans
+T_cies026_5nm(isnan(T_cies026_5nm)) = 0;
+activations = T_cies026_1nm;
+wls=wlsCIES026;
+%function [spectralLocus,checkIntegral] = getSpectralLocus(wls,activations)
+
+% simulate spectral locus with delta functions
+
+slSPD = zeros(size(activations,2),size(activations,2));
+for ii=1:size(activations,2)
+    slSPD(ii,ii) = 100000000000;
+end;
+
+plot(wls,slSPD(
+checkIntegral = trapz(wls,slSPD(:,1));
+
+% calculate spectral locus in L,M,S,R,I coordinate space
+for m=1:size(activations,2)
+    for k=1:size(activations,1)
+        spectralLocus(m,k)=activations(k,:)*(slSPD(:,m));
+    end
+end
+
+% remove Nans
+spectralLocus(isnan(spectralLocus))=0;
+
+%end
+

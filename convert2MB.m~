@@ -1,0 +1,53 @@
+% created by ACH 10/04/2020
+% function to convert activations into MacLeod-Boynton Space
+% normalized so that V(lambda)photopic; V(lambda) scotopic, and Smb and Imb peak at one
+
+% load the photoreceptor spectral sensitivites
+% [S,M,L,Rod,Mel]
+[T_cies026, S_cies026] = GetCIES026;
+wlsCIES026 = (390:1:780)';
+% rescale only over range where we have cone fundmanetals i.e. 390nm:780nm
+% scale for spds with 1nm spacing
+T_cies026_1nm = T_cies026(:,11:end);
+% remove Nans
+T_cies026_1nm(isnan(T_cies026_1nm)) = 0;
+
+% write out l,m,s,r,i for convenience
+l=T_cies026_1nm(3,:);
+m=T_cies026_1nm(2,:);
+s=T_cies026_1nm(1,:);
+r=T_cies026_1nm(4,:);
+i=T_cies026_1nm(5,:);
+
+% constants
+cl = 0.692839;
+cm = 0.349676;
+cs = 0.0554786
+
+% calculate VLambda
+vLambda = (0.689903.*l)+(0.348322.*m);
+
+% check its the same as stockmon sharpe VLambda
+vLamSS = csvread('linCIE2008v10e_1.csv');
+
+% it is!
+
+% plot VLambda
+figure
+plot(wlsCIES026, vLambda);
+hold on;
+plot(wlsCIES026,vLamSS(1:391,2),'b--');
+title('VLambda check');
+
+% now calculate chromaticity coordinates
+lmb = (0.689903.*l)./vLambda;
+mmb = (0.348322.*m)./vLambda;
+smb = (0.0371597.*s)./vLambda;
+
+% plot chromaticity coordinates
+figure
+plot(wlsCIES026, lmb, 'r');
+hold on;
+plot(wlsCIES026, mmb, 'g');
+plot(wlsCIES026, smb, 'b');
+title('chromaticity coordinates check');
