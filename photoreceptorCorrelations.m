@@ -86,7 +86,7 @@ xlabel('S');
 ylabel('M');
 [r,p]=corrcoef([S,M]);
 txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
-text(6,2,txt);
+%text(6,2,txt);
 
 subplot(5,5,11)
 plot(S,L,'b.');
@@ -94,7 +94,7 @@ xlabel('S');
 ylabel('L');
 [r,p]=corrcoef([S,L]);
 txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
-text(6,0.9,txt);
+%text(6,0.9,txt);
 
 subplot(5,5,16)
 plot(S,R,'b.');
@@ -102,7 +102,7 @@ xlabel('S');
 ylabel('R');
 [r,p]=corrcoef([S,R]);
 txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
-text(6,0.9,txt);
+%text(6,0.9,txt);
 
 subplot(5,5,21)
 plot(S,I,'b.');
@@ -110,7 +110,7 @@ xlabel('S');
 ylabel('I');
 [r,p]=corrcoef([S,I]);
 txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
-text(6,0.9,txt);
+%text(6,0.9,txt);
 
 % for M
 
@@ -120,7 +120,7 @@ xlabel('M');
 ylabel('S');
 [r,p]=corrcoef([S,M]);
 txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
-text(6,0.9,txt);
+%text(6,0.9,txt);
 
 subplot(5,5,12)
 plot(M,L,'g.');
@@ -128,7 +128,7 @@ xlabel('M');
 ylabel('L');
 [r,p]=corrcoef([M,L]);
 txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
-text(6,0.9,txt);
+%text(6,0.9,txt);
 
 subplot(5,5,17)
 plot(M,R,'g.');
@@ -136,7 +136,7 @@ xlabel('M');
 ylabel('R');
 [r,p]=corrcoef([M,R]);
 txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
-text(6,0.9,txt);
+%text(6,0.9,txt);
 
 subplot(5,5,22)
 plot(M,I,'g.');
@@ -144,7 +144,7 @@ xlabel('M');
 ylabel('I');
 [r,p]=corrcoef([M,I]);
 txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
-text(6,0.9,txt);
+%text(6,0.9,txt);
 
 % for L
 
@@ -154,7 +154,7 @@ xlabel('L');
 ylabel('S');
 [r,p]=corrcoef([L,S]);
 txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
-text(6,0.9,txt);
+%text(6,0.9,txt);
 
 subplot(5,5,8)
 plot(L,M,'r.');
@@ -162,7 +162,7 @@ xlabel('L');
 ylabel('M');
 [r,p]=corrcoef([M,L]);
 txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
-text(6,0.9,txt);
+%text(6,0.9,txt);
 
 subplot(5,5,18)
 plot(L,R,'r.');
@@ -170,7 +170,7 @@ xlabel('L');
 ylabel('R');
 [r,p]=corrcoef([L,R]);
 txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
-text(6,0.9,txt);
+%text(6,0.9,txt);
 
 subplot(5,5,23)
 plot(L,I,'r.');
@@ -178,7 +178,7 @@ xlabel('L');
 ylabel('I');
 [r,p]=corrcoef([L,I]);
 txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
-text(6,0.9,txt);
+%text(6,0.9,txt);
 
 % for R
 
@@ -188,7 +188,7 @@ xlabel('R');
 ylabel('S');
 [r,p]=corrcoef([R,S]);
 txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
-text(6,0.9,txt);
+%text(6,0.9,txt);
 
 subplot(5,5,9)
 plot(R,M,'c.');
@@ -196,7 +196,7 @@ xlabel('R');
 ylabel('M');
 [r,p]=corrcoef([R,M]);
 txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
-text(6,0.9,txt);
+%text(6,0.9,txt);
 
 subplot(5,5,14)
 plot(R,L,'c.');
@@ -204,7 +204,7 @@ xlabel('R');
 ylabel('L');
 [r,p]=corrcoef([L,R]);
 txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
-text(6,0.9,txt);
+%text(6,0.9,txt);
 
 subplot(5,5,24)
 plot(R,I,'c.');
@@ -212,7 +212,7 @@ xlabel('R');
 ylabel('I');
 [r,p]=corrcoef([R,I]);
 txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
-text(6,0.9,txt);
+%text(6,0.9,txt);
 
 % for I
 
@@ -222,7 +222,7 @@ xlabel('I');
 ylabel('S');
 [r,p]=corrcoef([I,S]);
 txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
-text(6,0.9,txt);
+%text(6,0.9,txt);
 
 subplot(5,5,10)
 plot(I,M,'m.');
@@ -230,7 +230,7 @@ xlabel('I');
 ylabel('M');
 [r,p]=corrcoef([I,M]);
 txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
-text(6,0.9,txt);
+%text(6,0.9,txt);
 
 subplot(5,5,15)
 plot(I,L,'m.');
@@ -238,7 +238,7 @@ xlabel('I');
 ylabel('L');
 [r,p]=corrcoef([I,L]);
 txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
-text(6,0.9,txt);
+%text(6,0.9,txt);
 
 subplot(5,5,20)
 plot(I,R,'m.');
@@ -246,7 +246,7 @@ xlabel('I');
 ylabel('R');
 [r,p]=corrcoef([R,I]);
 txt = {['R=' num2str(r(2))],['p=' num2str(p(2))]};
-text(6,0.9,txt);
+%text(6,0.9,txt);
 
 %% heatmap of correlations
 [r,p]=corrcoef([S,M]);

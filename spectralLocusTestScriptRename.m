@@ -67,6 +67,8 @@ for i=1:5
                     subplot(3,4,whichPlot)
                     scatter3(reshape(photoSim(:,:,i),[size(photoSim,1)*size(photoSim,2),1]),reshape(photoSim(:,:,j),[size(photoSim,1)*size(photoSim,2),1]),reshape(photoSim(:,:,k),[size(photoSim,1)*size(photoSim,2),1]),'k.');
                     hold on;
+                    %scatter3(daylightLocus(:,i),daylightLocus(:,j),daylightLocus(:,k),'bx');
+                    %hold on;
                     plot3(spectralLocus(:,i),spectralLocus(:,j),spectralLocus(:,k),'r-');
                     scatter3(daylightLocus(:,i),daylightLocus(:,j),daylightLocus(:,k),'bx');
                     set(gca,'YScale','log');
@@ -86,4 +88,7 @@ for i=1:5
         end
     end
 end
+
+%% plot luminance vs melanopsin
+
 %% convert to MacLeod Boynton space
