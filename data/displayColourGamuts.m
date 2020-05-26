@@ -344,3 +344,143 @@ ylim([0,1]);
 title('Display++');
 xlabel('x');
 ylabel('y');
+
+%% get simulated radiant spectra
+
+simRad = getSimulatedSpectra;
+
+%% set up 5nm spacing colorimetry
+wls_xyz = T_xyz(:, 1);
+T_xyz_5nm = 683*T_xyz(wls_xyz >= 390 & wls_xyz <= 780, 2:end)';
+wls_xyz = wls_xyz(wls_xyz >= 390 & wls_xyz <= 780, 1);
+% scale for spds with 5nm spacing
+wls_xyz_5nm = wls_xyz(1:5:end);
+T_xyz_5nm = T_xyz(:,1:5:end);
+
+[T_cies026, S_cies026] = GetCIES026;
+wlsCIES026 = (390:1:780)';
+% rescale only over range where we have cone fundmanetals i.e. 390nm:780nm
+% scale for spds with 5nm spacing
+wls_cies026_5nm = wlsCIES026(1:5:end);
+T_cies026_5nm = T_cies026(:,11:5:end);
+% remove Nans
+T_cies026_5nm(isnan(T_cies026_5nm)) = 0;
+
+%% calculate xyY and photoreceptor activations of simulated spectra
+
+% calculate xyY coordinates of simulated spectra
+xyYSim = XYZToxyY(T_xyz_5nm*simRad);
+
+% calculate photoreceptor activations of simulated spectra
+ssSim = T_cies026_5nm*simRad;
+
+%% plot on xy diagrams - normalisation question - priamries are in absolute radiance units but illuminants have been normalized
+
+% plot on xy diagram
+figure('defaultAxesFontSize',18)
+subplot(2,2,1)
+plotChromaticity();
+hold on;
+plot(xyYSim(1,:),xyYSim(2,:),'kx','LineWidth',2);
+h(1)=plot(xyYCRT(1,idxCRT),xyYCRT(2,idxCRT),'k-','LineWidth',2);
+h(2)=plot(xyYDP(1,idxDP),xyYDP(2,idxDP),'b-','LineWidth',2);
+h(3) = plot(xyYLCD(1,idxLCD),xyYDP(2,idxLCD),'-','Color',[0.75,0.75,0.75],'LineWidth',2);
+legend(h,{'CRT','DP','LCD'});
+xlabel('x');
+ylabel('y');
+
+subplot(2,2,2)
+scatter3(xyYSim(1,:),xyYSim(2,:),ssSim(2,:)+ssSim(3,:),'kx');
+hold on;
+l(1) = plot3(xyYDP(1,idxSSDP),xyYDP(2,idxSSDP),ssDP(2,idxSSDP)+ssDP(3,idxSSDP),'b');
+l(2) = plot3(xyYCRT(1,idxSSCRT),xyYCRT(2,idxSSCRT),ssCRT(2,idxSSCRT)+ssCRT(3,idxSSCRT),'k');
+l(3) = plot3(xyYLCD(1,idxSSLCD),xyYLCD(2,idxSSLCD),ssLCD(2,idxSSLCD)+ssLCD(3,idxSSLCD),'Color',[0.75,0.75,0.75]);
+xlabel('x');
+ylabel('y');
+zlabel('L+M');
+legend(l,{'DP','CRT','LCD'});
+
+subplot(2,2,3)
+scatter3(xyYSim(1,:),xyYSim(2,:),ssSim(5,:),'kx');
+hold on;
+l(1) = plot3(xyYDP(1,idxSSDP),xyYDP(2,idxSSDP),ssDP(5,idxSSDP),'b');
+l(2) = plot3(xyYCRT(1,idxSSCRT),xyYCRT(2,idxSSCRT),ssCRT(5,idxSSCRT),'k');
+l(3) = plot3(xyYLCD(1,idxSSLCD),xyYLCD(2,idxSSLCD),ssLCD(5,idxSSLCD),'Color',[0.75,0.75,0.75]);
+xlabel('x');
+ylabel('y');
+zlabel('Mel');
+legend(l,{'DP','CRT','LCD'});
+
+subplot(2,2,4)
+scatter3(xyYSim(1,:),xyYSim(2,:),ssSim(4,:),'kx');
+hold on;
+l(1) = plot3(xyYDP(1,idxSSDP),xyYDP(2,idxSSDP),ssDP(4,idxSSDP),'b');
+l(2) = plot3(xyYCRT(1,idxSSCRT),xyYCRT(2,idxSSCRT),ssCRT(4,idxSSCRT),'k');
+l(3) = plot3(xyYLCD(1,idxSSLCD),xyYLCD(2,idxSSLCD),ssLCD(4,idxSSLCD),'Color',[0.75,0.75,0.75]);
+xlabel('x');
+ylabel('y');
+zlabel('Rod');
+legend(l,{'DP','CRT','LCD'});
+
+%% heatmaps of simulated responses
+
+figure('defaultAxesFontSize',18)
+
+subplot(1,3,1)
+scatter(xyYSim(1,:),xyYSim(2,:),5,(ssSim(2,:)+ssSim(3,:)),'filled');
+c = colorbar
+c.Label.String = 'Lum';
+xlim([0,1]);
+ylim([0,1]);
+xlabel('x');
+ylabel('y');
+
+
+subplot(1,3,2)
+scatter(xyYSim(1,:),xyYSim(2,:),5,(ssSim(4,:)),'filled');
+c = colorbar
+c.Label.String = 'Rod';
+xlim([0,1]);
+ylim([0,1]);
+xlabel('x');
+ylabel('y');
+
+
+subplot(1,3,3)
+scatter(xyYSim(1,:),xyYSim(2,:),5,(ssSim(5,:)),'filled');
+c = colorbar
+c.Label.String = 'Mel';
+xlim([0,1]);
+ylim([0,1]);
+xlabel('x');
+ylabel('y');
+
+%% difference of mel and lum heatmap
+figure('defaultAxesFontSize',18)
+subplot(1,2,1)
+scatter(xyYSim(1,:),xyYSim(2,:),5,(ssSim(2,:)+ssSim(3,:))-ssSim(5,:),'filled');
+c = colorbar
+c.Label.String = 'Lum-Mel';
+xlim([0,1]);
+ylim([0,1]);
+xlabel('x');
+
+subplot(1,2,2)
+scatter(xyYSim(1,:),xyYSim(2,:),5,ssSim(5,:)./(ssSim(2,:)+ssSim(3,:)),'filled');
+c = colorbar
+c.Label.String = 'Mel/Lum';
+xlim([0,1]);
+ylim([0,1]);
+xlabel('x');
+ylabel('y');
+
+% plot these on display heatmaps
+% difference of simulated and display
+% plot L+M vs mel
+% add in spectral locus and daylight locus to all above plots
+% move to MacLeod Boynton space with displays
+
+%% correlations
+
+figure('defaultAxesFontSize',18)
+scatter((ssSim(2,:)+ssSim(3,:)),ssSim(5,:),'k.');
