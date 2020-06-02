@@ -235,6 +235,231 @@ xyYSim = XYZToxyY(T_xyz_5nm*simRad);
 ssSim = T_cies026_5nm*simRad;
 
 %% plot heatmaps for photopic, scoptopic luminance, and melanopsin
+
+
+% display slices here - everything above 0 lum in first plot of slice,
+% everything above 10 lum in second slice, etc - which can get from Y value
+% also want to do this for melanopsin slices
+% LCD up to 291; CRT up to 69; DP up to 132
+% for mel: LCD up to 0.3415; CRT up to 0.1006; DP up to 0.1392
+% to plot as slice can just set all lum > 10 equal to 10 in plot so forms
+% slice in 3d - also plot as full 3d mesh
+
+% define range of luminance levels for slice
+lumLevs = [1,10,20,30,40,50,60,100,125,150,200,250];
+
+% define color vector
+% set first colour to black
+cols = [0, 0, 0];
+count = 1./length(lumLevs);
+for k=1:length(lumLevs)-1
+    cols = [cols; repmat((count),[1,3])];
+    count = count + 1./length(lumLevs);
+end
+% fix colors later
+
+figure('defaultAxesFontSize',18)
+sgtitle('Luminance Slices');
+for i=1:length(lumLevs)
+    % for CRT
+    subplot(3,length(lumLevs),i)
+    plot(xyYCRTcombo(1,xyYCRTcombo(3,:)>lumLevs(i)),xyYCRTcombo(2,xyYCRTcombo(3,:)>lumLevs(i)),'.','Color',cols(i,:));
+    hold on;
+    plot(xyYSL(1,idxSL),xyYSL(2,idxSL),'k-');
+    xlim([0,1]);
+    ylim([0,1]);
+    if i==1
+        ylabel('CRT')
+    end
+    title(num2str(lumLevs(i)));
+    % for LCD
+    subplot(3,length(lumLevs),length(lumLevs)+i)
+    plot(xyYLCDcombo(1,xyYLCDcombo(3,:)>lumLevs(i)),xyYLCDcombo(2,xyYLCDcombo(3,:)>lumLevs(i)),'.','Color',cols(i,:));
+    hold on;
+    plot(xyYSL(1,idxSL),xyYSL(2,idxSL),'k-');
+    xlim([0,1]);
+    ylim([0,1]);
+    if i==1
+        ylabel('LCD');
+    end
+    % for Display ++
+    subplot(3,length(lumLevs),(2*length(lumLevs))+i)
+    plot(xyYDPcombo(1,xyYDPcombo(3,:)>lumLevs(i)),xyYDPcombo(2,xyYDPcombo(3,:)>lumLevs(i)),'.','Color',cols(i,:));
+    hold on;
+    plot(xyYSL(1,idxSL),xyYSL(2,idxSL),'k-');
+    xlim([0,1]);
+    ylim([0,1]);
+    if i==1
+        ylabel('DP');
+    end
+end;
+
+% and for melanopsin
+melLevs = [0,0.02,0.04,0.06,0.08,0.1,0.12,0.15,0.2,0.25,0.3,0.325];
+
+figure('defaultAxesFontSize',18)
+sgtitle('Melanopsin slices');
+for i=1:length(melLevs)
+    % for CRT
+    subplot(3,length(melLevs),i)
+    plot(xyYCRTcombo(1,ssCRTcombo(5,:)>melLevs(i)),xyYCRTcombo(2,ssCRTcombo(5,:)>melLevs(i)),'.','Color',cols(i,:));
+    hold on;
+    plot(xyYSL(1,idxSL),xyYSL(2,idxSL),'k-');
+    xlim([0,1]);
+    ylim([0,1]);
+    if i==1
+        ylabel('CRT')
+    end
+    title(num2str(melLevs(i)));
+    % for LCD
+    subplot(3,length(melLevs),length(melLevs)+i)
+    plot(xyYLCDcombo(1,ssLCDcombo(5,:)>melLevs(i)),xyYLCDcombo(2,ssLCDcombo(5,:)>melLevs(i)),'.','Color',cols(i,:));
+    hold on;
+    plot(xyYSL(1,idxSL),xyYSL(2,idxSL),'k-');
+    xlim([0,1]);
+    ylim([0,1]);
+    if i==1
+        ylabel('LCD');
+    end
+    % for Display ++
+    subplot(3,length(melLevs),(2*length(melLevs))+i)
+    plot(xyYDPcombo(1,ssDPcombo(5,:)>melLevs(i)),xyYDPcombo(2,ssDPcombo(5,:)>melLevs(i)),'.','Color',cols(i,:));
+    hold on;
+    plot(xyYSL(1,idxSL),xyYSL(2,idxSL),'k-');
+    xlim([0,1]);
+    ylim([0,1]);
+    if i==1
+        ylabel('DP');
+    end
+end;
+
+% and for rods
+
+%% and as 3d slices
+
+% i=1;
+% % % try with convex hulls
+% lowLumCRT = [xyYCRTcombo(1,xyYCRTcombo(3,:)>lumLevs(i));xyYCRTcombo(2,xyYCRTcombo(3,:)>lumLevs(i));repmat(lumLevs(i),[1,length(xyYCRTcombo(2,xyYCRTcombo(3,:)>lumLevs(i)))])];
+% %     
+% convCRT = boundary(lowLumCRT(1,:)',lowLumCRT(2,:)');
+% figure('defaultAxesFontSize',18)
+% plot(xyYCRTcombo(1,convCRT),xyYCRTcombo(2,convCRT));
+
+figure('defaultAxesFontSize',18)
+
+% make 3d slice plots
+for i=1:length(lumLevs)
+    subplot(2,3,1)
+    scatter3(xyYCRTcombo(1,xyYCRTcombo(3,:)>lumLevs(i)),xyYCRTcombo(2,xyYCRTcombo(3,:)>lumLevs(i)),repmat(lumLevs(i),[length(xyYCRTcombo(2,xyYCRTcombo(3,:)>lumLevs(i))),1]),'.','MarkerFaceColor',cols(i,:),'MarkerEdgeColor',cols(i,:));
+    hold on;
+    plot3(xyYSL(1,idxSL),xyYSL(2,idxSL),repmat(0,[length(xyYSL(1,idxSL)),1]),'k-');
+    zlim([0,250]);
+    title('CRT');
+    zlabel('Luminance');
+    subplot(2,3,2)
+    scatter3(xyYLCDcombo(1,xyYLCDcombo(3,:)>lumLevs(i)),xyYLCDcombo(2,xyYLCDcombo(3,:)>lumLevs(i)),repmat(lumLevs(i),[length(xyYLCDcombo(2,xyYLCDcombo(3,:)>lumLevs(i))),1]),'.','MarkerFaceColor',cols(i,:),'MarkerEdgeColor',cols(i,:));
+    hold on;
+    plot3(xyYSL(1,idxSL),xyYSL(2,idxSL),repmat(0,[length(xyYSL(1,idxSL)),1]),'k-');
+    zlim([0,250]);
+    title('LCD')
+    subplot(2,3,3)
+    scatter3(xyYDPcombo(1,xyYDPcombo(3,:)>lumLevs(i)),xyYDPcombo(2,xyYDPcombo(3,:)>lumLevs(i)),repmat(lumLevs(i),[length(xyYDPcombo(2,xyYDPcombo(3,:)>lumLevs(i))),1]),'.','MarkerFaceColor',cols(i,:),'MarkerEdgeColor',cols(i,:));
+    hold on;
+    plot3(xyYSL(1,idxSL),xyYSL(2,idxSL),repmat(0,[length(xyYSL(1,idxSL)),1]),'k-');
+    zlim([0,250]);
+    title('Display++')
+end
+
+% repeat for melanopsin - on same plot for 3d slices
+% make 3d slice plots
+for i=1:length(melLevs)
+    subplot(2,3,4)
+    scatter3(xyYCRTcombo(1,ssCRTcombo(5,:)>melLevs(i)),xyYCRTcombo(2,ssCRTcombo(5,:)>melLevs(i)),repmat(melLevs(i),[length(xyYCRTcombo(2,ssCRTcombo(5,:)>melLevs(i))),1]),'.','MarkerFaceColor',cols(i,:),'MarkerEdgeColor',cols(i,:));
+    hold on;
+    plot3(xyYSL(1,idxSL),xyYSL(2,idxSL),repmat(0,[length(xyYSL(1,idxSL)),1]),'k-');
+    zlim([0,0.35]);
+    zlabel('Mel');
+    subplot(2,3,5)
+    scatter3(xyYLCDcombo(1,ssLCDcombo(5,:)>melLevs(i)),xyYLCDcombo(2,ssLCDcombo(5,:)>melLevs(i)),repmat(melLevs(i),[length(xyYLCDcombo(2,ssLCDcombo(5,:)>melLevs(i))),1]),'.','MarkerFaceColor',cols(i,:),'MarkerEdgeColor',cols(i,:));
+    hold on;
+    plot3(xyYSL(1,idxSL),xyYSL(2,idxSL),repmat(0,[length(xyYSL(1,idxSL)),1]),'k-');
+    zlim([0,0.35]);
+    subplot(2,3,6)
+    scatter3(xyYDPcombo(1,ssDPcombo(5,:)>melLevs(i)),xyYDPcombo(2,ssDPcombo(5,:)>melLevs(i)),repmat(melLevs(i),[length(xyYDPcombo(2,ssDPcombo(5,:)>melLevs(i))),1]),'.','MarkerFaceColor',cols(i,:),'MarkerEdgeColor',cols(i,:));
+    hold on;
+    plot3(xyYSL(1,idxSL),xyYSL(2,idxSL),repmat(0,[length(xyYSL(1,idxSL)),1]),'k-');
+    zlim([0,0.35]);
+end
+
+%% and add on simulations
+
+figure('defaultAxesFontSize',18)
+
+% make 3d slice plots
+for i=1:length(lumLevs)
+    subplot(1,2,1)
+    sgtitle('CRT')
+    scatter3(xyYCRTcombo(1,xyYCRTcombo(3,:)>lumLevs(i)),xyYCRTcombo(2,xyYCRTcombo(3,:)>lumLevs(i)),repmat(lumLevs(i),[length(xyYCRTcombo(2,xyYCRTcombo(3,:)>lumLevs(i))),1]),'.','MarkerFaceColor',cols(i,:),'MarkerEdgeColor',cols(i,:));
+    hold on;
+    plot3(xyYSL(1,idxSL),xyYSL(2,idxSL),repmat(0,[length(xyYSL(1,idxSL)),1]),'k-');
+    plot3(xyYSim(1,:),xyYSim(2,:),xyYSim(3,:),'r.','MarkerSize',0.2);
+    zlabel('Luminance');
+    zlim([0,70]);
+    subplot(1,2,2)
+    scatter3(xyYCRTcombo(1,ssCRTcombo(5,:)>melLevs(i)),xyYCRTcombo(2,ssCRTcombo(5,:)>melLevs(i)),repmat(melLevs(i),[length(xyYCRTcombo(2,ssCRTcombo(5,:)>melLevs(i))),1]),'.','MarkerFaceColor',cols(i,:),'MarkerEdgeColor',cols(i,:));
+    hold on;
+    plot3(xyYSL(1,idxSL),xyYSL(2,idxSL),repmat(0,[length(xyYSL(1,idxSL)),1]),'k-');
+    plot3(xyYSim(1,:),xyYSim(2,:),ssSim(5,:),'r.','MarkerSize',0.2);
+    zlabel('Mel');
+    zlim([0,0.12]);
+end    
+
+figure('defaultAxesFontSize',18)
+
+% make 3d slice plots
+for i=1:length(lumLevs)
+    subplot(1,2,1)
+    sgtitle('LCD')
+    scatter3(xyYLCDcombo(1,xyYLCDcombo(3,:)>lumLevs(i)),xyYLCDcombo(2,xyYLCDcombo(3,:)>lumLevs(i)),repmat(lumLevs(i),[length(xyYLCDcombo(2,xyYLCDcombo(3,:)>lumLevs(i))),1]),'.','MarkerFaceColor',cols(i,:),'MarkerEdgeColor',cols(i,:));
+    hold on;
+    plot3(xyYSL(1,idxSL),xyYSL(2,idxSL),repmat(0,[length(xyYSL(1,idxSL)),1]),'k-');
+    plot3(xyYSim(1,:),xyYSim(2,:),xyYSim(3,:),'r.','MarkerSize',0.2);
+    zlabel('Luminance');
+    zlim([0,300]);
+    subplot(1,2,2)
+    scatter3(xyYLCDcombo(1,ssLCDcombo(5,:)>melLevs(i)),xyYLCDcombo(2,ssLCDcombo(5,:)>melLevs(i)),repmat(melLevs(i),[length(xyYLCDcombo(2,ssLCDcombo(5,:)>melLevs(i))),1]),'.','MarkerFaceColor',cols(i,:),'MarkerEdgeColor',cols(i,:));
+    hold on;
+    plot3(xyYSL(1,idxSL),xyYSL(2,idxSL),repmat(0,[length(xyYSL(1,idxSL)),1]),'k-');
+    plot3(xyYSim(1,:),xyYSim(2,:),ssSim(5,:),'r.','MarkerSize',0.2);
+    zlabel('Mel');
+    zlim([0,0.35]);
+end 
+
+figure('defaultAxesFontSize',18)
+
+% make 3d slice plots
+for i=1:length(lumLevs)
+    subplot(1,2,1)
+    sgtitle('DP')
+    scatter3(xyYDPcombo(1,xyYDPcombo(3,:)>lumLevs(i)),xyYDPcombo(2,xyYDPcombo(3,:)>lumLevs(i)),repmat(lumLevs(i),[length(xyYDPcombo(2,xyYDPcombo(3,:)>lumLevs(i))),1]),'.','MarkerFaceColor',cols(i,:),'MarkerEdgeColor',cols(i,:));
+    hold on;
+    plot3(xyYSL(1,idxSL),xyYSL(2,idxSL),repmat(0,[length(xyYSL(1,idxSL)),1]),'k-');
+    plot3(xyYSim(1,:),xyYSim(2,:),xyYSim(3,:),'r.','MarkerSize',0.2);
+    zlabel('Luminance');
+    zlim([0,150]);
+    subplot(1,2,2)
+    scatter3(xyYDPcombo(1,ssDPcombo(5,:)>melLevs(i)),xyYDPcombo(2,ssDPcombo(5,:)>melLevs(i)),repmat(melLevs(i),[length(xyYDPcombo(2,ssDPcombo(5,:)>melLevs(i))),1]),'.','MarkerFaceColor',cols(i,:),'MarkerEdgeColor',cols(i,:));
+    hold on;
+    plot3(xyYSL(1,idxSL),xyYSL(2,idxSL),repmat(0,[length(xyYSL(1,idxSL)),1]),'k-');
+    plot3(xyYSim(1,:),xyYSim(2,:),ssSim(5,:),'r.','MarkerSize',0.2);
+    zlabel('Mel');
+    zlim([0,0.15]);
+end 
+
+% issue here is on basis of scaling
+
+%% old 3D heatmaps
+
 figure('defaultAxesFontSize',18)
 
 % xyY 
@@ -772,3 +997,72 @@ plot3(mbSL(3,idxSL)./(mbSL(2,idxSL)+mbSL(3,idxSL)),mbSL(1,idxSL)./(mbSL(2,idxSL)
 zlabel('I/L+M');
 ylabel('S/L+M');
 xlabel('L/L+M');
+
+%% plot in cone activations normalized to peak at unity (MB ideas but not MB normalization)
+
+%% 2D DKL projections with display gamuts
+
+% clean up here to define ssSim(3,:)/xxx as quantity itself
+
+figure('defaultAxesFontSize',18)
+subplot(1,3,1)
+scatter(ssSim(3,:)./(ssSim(5,:)+ssSim(4,:)+ssSim(1,:)+ssSim(3,:)+ssSim(2,:)),ssSim(1,:)./(ssSim(5,:)+ssSim(4,:)+ssSim(1,:)+ssSim(3,:)+ssSim(2,:)),'k.');
+hold on;
+k(1)=plot(ssCRT(3,idxCRT)./(ssCRT(5,idxCRT)+ssCRT(4,idxCRT)+ssCRT(1,idxCRT)+ssCRT(3,idxCRT)+ssCRT(2,idxCRT)),ssCRT(1,idxCRT)./(ssCRT(5,idxCRT)+ssCRT(4,idxCRT)+ssCRT(1,idxCRT)+ssCRT(3,idxCRT)+ssCRT(2,idxCRT)),'r-');
+k(2)=plot(ssLCD(3,idxCRT)./(ssLCD(5,idxCRT)+ssLCD(4,idxCRT)+ssLCD(1,idxCRT)+ssLCD(3,idxCRT)+ssLCD(2,idxCRT)),ssLCD(1,idxCRT)./(ssLCD(5,idxCRT)+ssLCD(4,idxCRT)+ssLCD(1,idxCRT)+ssLCD(3,idxCRT)+ssLCD(2,idxCRT)),'g-');
+k(3)=plot(ssDP(3,idxCRT)./(ssDP(5,idxCRT)+ssDP(4,idxCRT)+ssDP(1,idxCRT)+ssDP(3,idxCRT)+ssDP(2,idxCRT)),ssDP(1,idxCRT)./(ssDP(5,idxCRT)+ssDP(4,idxCRT)+ssDP(1,idxCRT)+ssDP(3,idxCRT)+ssDP(2,idxCRT)),'b-');
+legend(k,{'CRT','LCD','DP'});
+xlabel('L/L+M+S+R+I')
+ylabel('S/L+M+S+R+I')
+
+subplot(1,3,2)
+scatter(ssSim(3,:)./(ssSim(5,:)+ssSim(4,:)+ssSim(1,:)+ssSim(3,:)+ssSim(2,:)),ssSim(5,:)./(ssSim(5,:)+ssSim(4,:)+ssSim(1,:)+ssSim(3,:)+ssSim(2,:)),'k.');
+hold on;
+k(1)=plot(ssCRT(3,idxCRT)./(ssCRT(5,idxCRT)+ssCRT(4,idxCRT)+ssCRT(1,idxCRT)+ssCRT(3,idxCRT)+ssCRT(2,idxCRT)),ssCRT(5,idxCRT)./(ssCRT(5,idxCRT)+ssCRT(4,idxCRT)+ssCRT(1,idxCRT)+ssCRT(3,idxCRT)+ssCRT(2,idxCRT)),'r-');
+k(2)=plot(ssLCD(3,idxCRT)./(ssLCD(5,idxCRT)+ssLCD(4,idxCRT)+ssLCD(1,idxCRT)+ssLCD(3,idxCRT)+ssLCD(2,idxCRT)),ssLCD(5,idxCRT)./(ssLCD(5,idxCRT)+ssLCD(4,idxCRT)+ssLCD(1,idxCRT)+ssLCD(3,idxCRT)+ssLCD(2,idxCRT)),'g-');
+k(3)=plot(ssDP(3,idxCRT)./(ssDP(5,idxCRT)+ssDP(4,idxCRT)+ssDP(1,idxCRT)+ssDP(3,idxCRT)+ssDP(2,idxCRT)),ssDP(5,idxCRT)./(ssDP(5,idxCRT)+ssDP(4,idxCRT)+ssDP(1,idxCRT)+ssDP(3,idxCRT)+ssDP(2,idxCRT)),'b-');
+legend(k,{'CRT','LCD','DP'});
+xlabel('L/L+M+S+R+I')
+ylabel('Mel/L+M+S+R+I')
+
+subplot(1,3,3)
+scatter(ssSim(5,:)./(ssSim(5,:)+ssSim(4,:)+ssSim(1,:)+ssSim(3,:)+ssSim(2,:)),ssSim(1,:)./(ssSim(5,:)+ssSim(4,:)+ssSim(1,:)+ssSim(3,:)+ssSim(2,:)),'k.');
+hold on;
+k(1)=plot(ssCRT(5,idxCRT)./(ssCRT(5,idxCRT)+ssCRT(4,idxCRT)+ssCRT(1,idxCRT)+ssCRT(3,idxCRT)+ssCRT(2,idxCRT)),ssCRT(1,idxCRT)./(ssCRT(5,idxCRT)+ssCRT(4,idxCRT)+ssCRT(1,idxCRT)+ssCRT(3,idxCRT)+ssCRT(2,idxCRT)),'r-');
+k(2)=plot(ssLCD(5,idxCRT)./(ssLCD(5,idxCRT)+ssLCD(4,idxCRT)+ssLCD(1,idxCRT)+ssLCD(3,idxCRT)+ssLCD(2,idxCRT)),ssLCD(1,idxCRT)./(ssLCD(5,idxCRT)+ssLCD(4,idxCRT)+ssLCD(1,idxCRT)+ssLCD(3,idxCRT)+ssLCD(2,idxCRT)),'g-');
+k(3)=plot(ssDP(5,idxCRT)./(ssDP(5,idxCRT)+ssDP(4,idxCRT)+ssDP(1,idxCRT)+ssDP(3,idxCRT)+ssDP(2,idxCRT)),ssDP(1,idxCRT)./(ssDP(5,idxCRT)+ssDP(4,idxCRT)+ssDP(1,idxCRT)+ssDP(3,idxCRT)+ssDP(2,idxCRT)),'b-');
+legend(k,{'CRT','LCD','DP'});
+xlabel('Mel/L+M+S+R+I')
+ylabel('S/L+M+S+R+I')
+
+
+%% remove below plot but try to do a histogram or spread plot to replace this to quantify along each projection, quantify in each space, and quantify in 3D space - quantify volume
+figure()
+scatter((ssSim(5,:)+ssSim(4,:)+ssSim(1,:)+ssSim(3,:)+ssSim(2,:)),ssSim(1,:)./(ssSim(5,:)+ssSim(4,:)+ssSim(1,:)+ssSim(3,:)+ssSim(2,:)),'k.');
+hold on;
+k(1)=plot((ssCRT(5,idxCRT)+ssCRT(4,idxCRT)+ssCRT(1,idxCRT)+ssCRT(3,idxCRT)+ssCRT(2,idxCRT)),ssCRT(1,idxCRT)./(ssCRT(5,idxCRT)+ssCRT(4,idxCRT)+ssCRT(1,idxCRT)+ssCRT(3,idxCRT)+ssCRT(2,idxCRT)),'r-');
+k(2)=plot((ssLCD(5,idxCRT)+ssLCD(4,idxCRT)+ssLCD(1,idxCRT)+ssLCD(3,idxCRT)+ssLCD(2,idxCRT)),ssLCD(1,idxCRT)./(ssLCD(5,idxCRT)+ssLCD(4,idxCRT)+ssLCD(1,idxCRT)+ssLCD(3,idxCRT)+ssLCD(2,idxCRT)),'g-');
+k(3)=plot((ssDP(5,idxCRT)+ssDP(4,idxCRT)+ssDP(1,idxCRT)+ssDP(3,idxCRT)+ssDP(2,idxCRT)),ssDP(1,idxCRT)./(ssDP(5,idxCRT)+ssDP(4,idxCRT)+ssDP(1,idxCRT)+ssDP(3,idxCRT)+ssDP(2,idxCRT)),'b-');
+legend(k,{'CRT','LCD','DP'});
+xlabel('L+M+S+R+I')
+ylabel('S/L+M+S+R+I')
+%% try to count number of points in each region - apply this to above plots and other plots that I like
+%% figure out how to take all of this into 3D for 3D projections
+
+% try to define triangle polygon from coordinates of CRT gamut
+pgonCRT = polyshape(xyYCRT(1,:),xyYCRT(2,:));
+figure
+plot(pgonCRT);
+hold on;
+[in, on] = inpolygon(xyYSim(1,:),xyYSim(2,:),xyYCRT(1,:),xyYCRT(2,:));
+sum(in)+sum(on)
+x=xyYSim(1,:);
+y=xyYSim(2,:);
+plot(x(in),y(in),'rx');
+plot(x(~in),y(~in),'bo');
+
+%% for xyY plots vs sim - make Y and mel L+M/L+M+S+R+I and I/L+M+S+R+I to avoid normalization issues!
+
+%% add in slices for 3D info for the above LM space plots
+
+
