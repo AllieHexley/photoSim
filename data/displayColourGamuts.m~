@@ -3,6 +3,7 @@
 % created by ACH on 13/05/2020
 
 clear all;
+close all;
 clc;
 
 %% Set up colorimetry
@@ -1035,11 +1036,41 @@ legend(k,{'CRT','LCD','DP'});
 xlabel('Mel/L+M+S+R+I')
 ylabel('S/L+M+S+R+I')
 
-%% try to count number of points in each region
+
+%% remove below plot but try to do a histogram or spread plot to replace this to quantify along each projection, quantify in each space, and quantify in 3D space - quantify volume
+figure()
+scatter((ssSim(5,:)+ssSim(4,:)+ssSim(1,:)+ssSim(3,:)+ssSim(2,:)),ssSim(1,:)./(ssSim(5,:)+ssSim(4,:)+ssSim(1,:)+ssSim(3,:)+ssSim(2,:)),'k.');
+hold on;
+k(1)=plot((ssCRT(5,idxCRT)+ssCRT(4,idxCRT)+ssCRT(1,idxCRT)+ssCRT(3,idxCRT)+ssCRT(2,idxCRT)),ssCRT(1,idxCRT)./(ssCRT(5,idxCRT)+ssCRT(4,idxCRT)+ssCRT(1,idxCRT)+ssCRT(3,idxCRT)+ssCRT(2,idxCRT)),'r-');
+k(2)=plot((ssLCD(5,idxCRT)+ssLCD(4,idxCRT)+ssLCD(1,idxCRT)+ssLCD(3,idxCRT)+ssLCD(2,idxCRT)),ssLCD(1,idxCRT)./(ssLCD(5,idxCRT)+ssLCD(4,idxCRT)+ssLCD(1,idxCRT)+ssLCD(3,idxCRT)+ssLCD(2,idxCRT)),'g-');
+k(3)=plot((ssDP(5,idxCRT)+ssDP(4,idxCRT)+ssDP(1,idxCRT)+ssDP(3,idxCRT)+ssDP(2,idxCRT)),ssDP(1,idxCRT)./(ssDP(5,idxCRT)+ssDP(4,idxCRT)+ssDP(1,idxCRT)+ssDP(3,idxCRT)+ssDP(2,idxCRT)),'b-');
+legend(k,{'CRT','LCD','DP'});
+xlabel('L+M+S+R+I')
+ylabel('S/L+M+S+R+I')
+%% try to count number of points in each region - apply this to above plots and other plots that I like
+%% figure out how to take all of this into 3D for 3D projections
 
 % try to define triangle polygon from coordinates of CRT gamut
-pgonCRT = polyshape((ssCRT
+pgonCRT = polyshape(xyYCRT(1,:),xyYCRT(2,:));
+figure
+plot(pgonCRT);
+hold on;
+[in, on] = inpolygon(xyYSim(1,:),xyYSim(2,:),xyYCRT(1,:),xyYCRT(2,:));
+sum(in)+sum(on)
+x=xyYSim(1,:);
+y=xyYSim(2,:);
+plot(x(in),y(in),'rx');
+plot(x(~in),y(~in),'bo');
+
+%% for xyY plots vs sim - make Y and mel L+M/L+M+S+R+I and I/L+M+S+R+I to avoid normalization issues!
 
 %% add in slices for 3D info for the above LM space plots
 
+%% save data structures for neater plotting
 
+CRT = struct('xyY', xyYCRT, 'rgb', rgbCRT, 'ss', ssCRT, 'xyYFullRange', xyYCRTcombo, 'ssFullRange', ssCRTcombo);
+DP = struct('xyY', xyYDP, 'rgb', rgbDP, 'ss', ssDP, 'xyYFullRange', xyYDPcombo, 'ssFullRange', ssDPcombo);
+LCD = struct('xyY', xyYLCD, 'rgb', rgbLCD, 'ss', ssLCD, 'xyYFullRange', xyYLCDcombo, 'ssFullRange', ssLCDcombo);
+Sim = struct('xyY', xyYSim, 'ss', ssSim);
+
+save('colorimetry.mat','CRT','DP','LCD','Sim');

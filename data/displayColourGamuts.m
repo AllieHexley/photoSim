@@ -3,6 +3,7 @@
 % created by ACH on 13/05/2020
 
 clear all;
+close all;
 clc;
 
 %% Set up colorimetry
@@ -1065,4 +1066,11 @@ plot(x(~in),y(~in),'bo');
 
 %% add in slices for 3D info for the above LM space plots
 
+%% save data structures for neater plotting
 
+CRT = struct('xyY', xyYCRT, 'rgb', rgbCRT, 'ss', ssCRT, 'xyYFullRange', xyYCRTcombo, 'ssFullRange', ssCRTcombo);
+DP = struct('xyY', xyYDP, 'rgb', rgbDP, 'ss', ssDP, 'xyYFullRange', xyYDPcombo, 'ssFullRange', ssDPcombo);
+LCD = struct('xyY', xyYLCD, 'rgb', rgbLCD, 'ss', ssLCD, 'xyYFullRange', xyYLCDcombo, 'ssFullRange', ssLCDcombo);
+Sim = struct('xyY', xyYSim, 'ss', ssSim);
+
+save('colorimetry.mat','CRT','DP','LCD','Sim');
