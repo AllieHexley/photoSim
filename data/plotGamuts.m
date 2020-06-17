@@ -122,6 +122,31 @@ k(1)=plot(CRT.ss(5,idxCRT)./(CRT.ss(1,idxCRT)+CRT.ss(2,idxCRT)+CRT.ss(3,idxCRT)+
 xlabel('I/L+M+S+R+I')
 ylabel('S/L+M+S+R+I')
 
+%% calculate RMS between desired and resulting mel level and plot as histogram of RMS levels
+
+% some error happening here...
+a=[Sim.ssRealizedCRT(1,:);Sim.ss(1,:)];
+arms = rms(a,1);
+b=[Sim.ssRealizedCRT(2,:);Sim.ss(2,:)];
+brms = rms(b,1);
+c=[Sim.ssRealizedCRT(3,:);Sim.ss(3,:)];
+crms = rms(c,1);
+d=[Sim.ssRealizedCRT(4,:);Sim.ss(4,:)];
+drms = rms(d,1);
+e=[Sim.ssRealizedCRT(5,:);Sim.ss(5,:)];
+erms = rms(e,1);
+figure()
+subplot(3,2,1)
+histogram(arms);
+subplot(3,2,2)
+histogram(brms);
+subplot(3,2,3)
+histogram(crms);
+subplot(3,2,4)
+histogram(drms);
+subplot(3,2,5)
+histogram(erms);
+
 
 % subplot(3,3,4)
 % scatter(Sim.ssNorm(3,:),Sim.ssNorm(1,:),'k.');
