@@ -252,10 +252,10 @@ wls_xyz = wls_xyz(wls_xyz >= 390 & wls_xyz <= 780, 1);
 wls_xyz = [];
 
 for i = 1:length(Sim.ss)
-    rgbSettingCRT = crtLMS2RGB*Sim.ss(1:3,i);
-    rgbRealizedCRT = (rgbSettingCRT'.*CRT.rgb);
-    Sim.ssRealizedCRT(:,i) = T_cies026*(rgbRealizedCRT(:,1)+rgbRealizedCRT(:,2)+rgbRealizedCRT(:,3));
-    Sim.xyRealizedCRT(:,i) = XYZToxyY(T_xyz*(rgbRealizedCRT(:,1)+rgbRealizedCRT(:,2)+rgbRealizedCRT(:,3)));
+    rgbSettingCRT{i} = crtLMS2RGB*Sim.ss(1:3,i);
+    rgbRealizedCRT{i} = (rgbSettingCRT{i}'.*CRT.rgb);
+    Sim.ssRealizedCRT(:,i) = T_cies026*(rgbRealizedCRT{i}(:,1)+rgbRealizedCRT{i}(:,2)+rgbRealizedCRT{i}(:,3));
+    Sim.xyRealizedCRT(:,i) = XYZToxyY(T_xyz*(rgbRealizedCRT{i}(:,1)+rgbRealizedCRT{i}(:,2)+rgbRealizedCRT{i}(:,3)));
     
     rgbSettingDP = DPLMS2RGB*Sim.ss(1:3,i);
     rgbRealizedDP = (rgbSettingDP'.*DP.rgb);
@@ -264,6 +264,13 @@ for i = 1:length(Sim.ss)
     rgbSettingLCD = LCDLMS2RGB*Sim.ss(1:3,i);
     rgbRealizedLCD = (rgbSettingLCD'.*LCD.rgb);
     Sim.ssRealizedLCD(:,i) = T_cies026*(rgbRealizedLCD(:,1)+rgbRealizedLCD(:,2)+rgbRealizedLCD(:,3));
+end
+
+%% check if any RGB are implausible
+d=0;
+for i=1:length(rgbSettingCRT);
+    c=sum(rgbSettingCRT{i}>1)+sum(rgbSettingCRT{i}<0);
+    d=d+c;
 end
 
 %% plot on xy heatmap of how much did mel shift 
@@ -538,10 +545,10 @@ for i=1:10
     capturedWarp{i} = sum(inWarp{i})+sum(onWarp{i});
     percCapturedWarp{i} = round((capturedWarp{i}./totalSpec).*100,1);
     
-    text(0.01,0.1,['% all sim: ', num2str(percCaptured{i})],'FontSize',18);
-    text(0.01,0.11,['% warped: ', num2str(percCapturedWarp{i})],'FontSize',18);
-    %xlim([0,0.12]);
-    %ylim([0,0.12]);
+    text(0.01,0.4,['% all sim: ', num2str(percCaptured{i})],'FontSize',18);
+    text(0.01,0.45,['% warped: ', num2str(percCapturedWarp{i})],'FontSize',18);
+    xlim([0,0.5]);
+    ylim([0,0.5]);
 end
 
 

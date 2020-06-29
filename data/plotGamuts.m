@@ -7,7 +7,7 @@ clc;
 
 %% load data
 
-load('colorimetryNormPrimaries.mat');
+load('colorimetry.mat');
 load('spectralSensitivities.mat');
 
 %% plot luminance correlation
@@ -252,19 +252,45 @@ wls_xyz = wls_xyz(wls_xyz >= 390 & wls_xyz <= 780, 1);
 wls_xyz = [];
 
 for i = 1:length(Sim.ss)
-    rgbSettingCRT = crtLMS2RGB*Sim.ss(1:3,i);
-    rgbRealizedCRT = (rgbSettingCRT'.*CRT.rgb);
-    Sim.ssRealizedCRT(:,i) = T_cies026*(rgbRealizedCRT(:,1)+rgbRealizedCRT(:,2)+rgbRealizedCRT(:,3));
-    Sim.xyRealizedCRT(:,i) = XYZToxyY(T_xyz*(rgbRealizedCRT(:,1)+rgbRealizedCRT(:,2)+rgbRealizedCRT(:,3)));
+    rgbSettingCRT{i} = crtLMS2RGB*Sim.ss(1:3,i);
+    rgbRealizedCRT{i} = (rgbSettingCRT{i}'.*CRT.rgb);
+    Sim.ssRealizedCRT(:,i) = T_cies026*(rgbRealizedCRT{i}(:,1)+rgbRealizedCRT{i}(:,2)+rgbRealizedCRT{i}(:,3));
+    Sim.xyRealizedCRT(:,i) = XYZToxyY(T_xyz*(rgbRealizedCRT{i}(:,1)+rgbRealizedCRT{i}(:,2)+rgbRealizedCRT{i}(:,3)));
     
-    rgbSettingDP = DPLMS2RGB*Sim.ss(1:3,i);
-    rgbRealizedDP = (rgbSettingDP'.*DP.rgb);
-    Sim.ssRealizedDP(:,i) = T_cies026*(rgbRealizedDP(:,1)+rgbRealizedDP(:,2)+rgbRealizedDP(:,3));
+    rgbSettingDP{i} = DPLMS2RGB*Sim.ss(1:3,i);
+    rgbRealizedDP{i} = (rgbSettingDP{i}'.*DP.rgb);
+    Sim.ssRealizedDP(:,i) = T_cies026*(rgbRealizedDP{i}(:,1)+rgbRealizedDP{i}(:,2)+rgbRealizedDP{i}(:,3));
     
-    rgbSettingLCD = LCDLMS2RGB*Sim.ss(1:3,i);
-    rgbRealizedLCD = (rgbSettingLCD'.*LCD.rgb);
-    Sim.ssRealizedLCD(:,i) = T_cies026*(rgbRealizedLCD(:,1)+rgbRealizedLCD(:,2)+rgbRealizedLCD(:,3));
+    rgbSettingLCD{i} = LCDLMS2RGB*Sim.ss(1:3,i);
+    rgbRealizedLCD{i} = (rgbSettingLCD{i}'.*LCD.rgb);
+    Sim.ssRealizedLCD(:,i) = T_cies026*(rgbRealizedLCD{i}(:,1)+rgbRealizedLCD{i}(:,2)+rgbRealizedLCD{i}(:,3));
 end
+
+%% check if any RGB are implausible
+dCRT=0;
+dLCD=0;
+dDP=0;
+for i=1:length(rgbSettingCRT);
+    cCRT=sum(rgbSettingCRT{i}>1)+sum(rgbSettingCRT{i}<0);
+    dCRT=dCRT+cCRT;
+    
+        cLCD=sum(rgbSettingLCD{i}>1)+sum(rgbSettingLCD{i}<0);
+    dLCD=dLCD+cLCD;
+    
+        cDP=sum(rgbSettingDP{i}>1)+sum(rgbSettingDP{i}<0);
+    dDP=dDP+cDP;
+end
+
+capCRT = 100.*((totalSpec-dCRT)./totalSpec);
+capLCD = 100.*((totalSpec-dLCD)./totalSpec);
+capDP = 100.*((totalSpec-dDP)./totalSpec);
+
+%% plot of % captured 
+
+
+
+% do this was RGB primaries that are realistic - then plot illuminant
+% intensity (lum) vs % reproducible in LMSRI space too!
 
 %% plot on xy heatmap of how much did mel shift 
 
@@ -544,6 +570,14 @@ for i=1:10
     ylim([0,0.5]);
 end
 
+%% plot extended MB space with CRT gamut
+
+figure('defaultAxesFontSize',18)
+scatter3((CRT.ssFullRange(3,:)./(CRT.ssFullRange(3,:)+CRT.ssFullRange(2,:))),(CRT.ssFullRange(1,:)./(CRT.ssFullRange(3,:)+CRT.ssFullRange(2,:))),(CRT.ssFullRange(5,:)./(CRT.ssFullRange(3,:)+CRT.ssFullRange(2,:))),'kx');
+title('All Possible RGB settings for CRT and corresponding gamut');
+xlabel('L/L+M');
+ylabel('S/L+M');
+zlabel('I/L+M');
 
 %% normalise to find /L+M+S+R+I
 
