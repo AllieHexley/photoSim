@@ -959,17 +959,17 @@ idxSL = convhull(mbSL(1,:), mbSL(2,:));
 %% plot in MB space
 
 figure('defaultAxesFontSize',18)
-subplot(2,2,1)
+
 scatter(mbSim(3,:)./(mbSim(2,:)+mbSim(3,:)),mbSim(1,:)./(mbSim(2,:)+mbSim(3,:)),'k.');
 hold on;
-plot(mbSL(3,idxSL)./(mbSL(2,idxSL)+mbSL(3,idxSL)),mbSL(1,idxSL)./(mbSL(2,idxSL)+mbSL(3,idxSL)),'r-');
+%plot(mbSL(3,idxSL)./(mbSL(2,idxSL)+mbSL(3,idxSL)),mbSL(1,idxSL)./(mbSL(2,idxSL)+mbSL(3,idxSL)),'r-');
 h(1)=plot(mbCRT(3,idxCRT)./(mbCRT(2,idxCRT)+mbCRT(3,idxCRT)),mbCRT(1,idxCRT)./(mbCRT(2,idxCRT)+mbCRT(3,idxCRT)),'b-');
 h(2)=plot(mbLCD(3,idxCRT)./(mbLCD(2,idxCRT)+mbLCD(3,idxCRT)),mbLCD(1,idxCRT)./(mbLCD(2,idxCRT)+mbLCD(3,idxCRT)),'g-');
 h(3)=plot(mbDP(3,idxCRT)./(mbDP(2,idxCRT)+mbDP(3,idxCRT)),mbDP(1,idxCRT)./(mbDP(2,idxCRT)+mbDP(3,idxCRT)),'c-');
 legend(h,{'CRT','LCD','DP'});
 ylabel('S/L+M');
 xlabel('L/L+M');
-
+%%
 subplot(2,2,2)
 scatter(mbSim(4,:)./(mbSim(2,:)+mbSim(3,:)),mbSim(1,:)./(mbSim(2,:)+mbSim(3,:)),'k.');
 hold on;
