@@ -1,5 +1,5 @@
 % script to produce the simulate real-world spectra and primaries of a CRT,
-% LCD, and Display ++ display, and on two hypothetical displays
+% LCD, and Display ++ display, and on two hypothetical five primary displays
 % created by ACH 29/06/2020
 
 %% prepare workspace
@@ -116,52 +116,6 @@ if resimulate == 'y'
     xyYFP2 = XYZToxyY(T_xyz*rgbcmFP2);
     idxFP2 = convhull(xyYFP2(1,:), xyYFP2(2,:));
     
-    %% calculate all possible xyY coordinates and photoreceptor activations from the primaries for 8-bit resolution, assuming linearity and independence of the primaries
-    
-    c=1;
-    d=1;
-    bit=255;
-    % calculate all possible rgb combinations of displays
-    for i=(0:(1./bit):1)
-        for j =(0:(1./bit):1)
-            for k=(0:(1./bit):1)
-                % for CRT
-                crtCombo(:,c) = (i*rgbCRT(:,1))+(j*rgbCRT(:,2))+(k*rgbCRT(:,3));
-                % for LCD
-                lcdCombo(:,c) = (i*rgbLCD(:,1))+(j*rgbLCD(:,2))+(k*rgbLCD(:,3));
-                % for DP
-                dpCombo(:,c) = (i*rgbDP(:,1))+(j*rgbDP(:,2))+(k*rgbDP(:,3));
-                c=c+1;
-                % include the below section if you want to simulate the five-primary
-                % Warning!: this takes up a lot of memory. I would advise
-                % reducing the number of bits when simulating the five primary
-                % displays!
-                            for l=(0:(1./bit):1)
-                                for m=(0:(1./bit):1)
-                                % for FP1
-                                fp1Combo(:,d) = (i*rgbcmFP1(:,1))+(j*rgbcmFP1(:,2))+(k*rgbcmFP1(:,3))+(l*rgbcmFP1(:,4))+(m*rgbcmFP1(:,5));
-                                % for FP2
-                                fp2Combo(:,d) = (i*rgbcmFP2(:,1))+(j*rgbcmFP2(:,2))+(k*rgbcmFP2(:,3))+(l*rgbcmFP2(:,4))+(m*rgbcmFP2(:,5));
-                                d=d+1;
-                                end
-                            end
-            end
-        end
-    end
-    
-    % calculate associated colorimetry
-    xyYCRTcombo = XYZToxyY(T_xyz*crtCombo);
-    ssCRTcombo = T_cies026*crtCombo;
-    xyYLCDcombo = XYZToxyY(T_xyz*lcdCombo);
-    ssLCDcombo = T_cies026*lcdCombo;
-    xyYDPcombo = XYZToxyY(T_xyz*dpCombo);
-    ssDPcombo = T_cies026*dpCombo;
-    % Again, uncomment if you want to simulate the five primary displays
-    xyYFP1combo = XYZToxyY(T_xyz*fp1Combo);
-    ssFP1combo = T_cies026*fp1Combo;
-    xyYFP2combo = XYZToxyY(T_xyz*fp2Combo);
-    ssFP2combo = T_cies026*fp2Combo;
-    
     %% get spectral and daylight locus
     
     slRad = getSpectralLocusSpectra(390:780); % get spectral locus from 390:780
@@ -186,6 +140,27 @@ if resimulate == 'y'
     % remove Nans
     T_cies026_5nm(isnan(T_cies026_5nm)) = 0;
     
+    %% set up MacLeod-Boynton chromaticity coordinates
+    lScale = 0.69283932; 
+    mScale = 0.34967567;
+    sScale = 0.05547858;
+    % scale factors from CVRL MacLeod & Boynton (1979) 10-deg chromaticity 
+    % coordinates based on the Stockman & Sharpe (2000) cone fundamentals: http://www.cvrl.org/    
+
+    mb026(2,:) = T_cies026(2,:)*mScale;
+    mb026(3,:) = T_cies026(3,:)*lScale;
+    mb026(1,:) = T_cies026(1,:)*sScale;
+    
+    iScale = 1./max(T_cies026(5,:)./(mb026(2,:)+mb026(3,:))); % so I/L+M peaks at 1
+    mb026(5,:) = T_cies026(5,:)*iScale;
+    
+    % rescale only over range where we have cone fundmanetals i.e. 390nm:780nm
+    % scale for spds with 5nm spacing
+    mb026_5nm = mb026(:,1:5:end);
+    % remove Nans
+    mb026_5nm(isnan(mb026_5nm)) = 0;
+    mb026(isnan(mb026))=0;
+    
     %% calculate xyY and photoreceptor activations of spectral locus
     
     % calculate xyY coordinates of spectral locus
@@ -194,6 +169,10 @@ if resimulate == 'y'
     
     % calculate photoreceptor activations of spectral locus
     ssSL = T_cies026*slRad;
+    ssmbSL = mb026*slRad;
+    mbSL(1,:) = ssmbSL(1,:)./(ssmbSL(2,:)+ssmbSL(3,:));
+    mbSL(2,:) = ssmbSL(3,:)./(ssmbSL(2,:)+ssmbSL(3,:));
+    mbSL(3,:) = ssmbSL(5,:)./(ssmbSL(2,:)+ssmbSL(3,:));
     
     %% calculate xyY and photoreceptor activations of daylight locus
     
@@ -203,6 +182,10 @@ if resimulate == 'y'
     
     % calculate photoreceptor activations of daylight locus
     ssDL = T_cies026_5nm*dlRad;
+    ssmbDL = mb026_5nm*dlRad;
+    mbDL(1,:) = ssmbDL(1,:)./(ssmbDL(2,:)+ssmbDL(3,:));
+    mbDL(2,:) = ssmbDL(3,:)./(ssmbDL(2,:)+ssmbDL(3,:));
+    mbDL(3,:) = ssmbDL(5,:)./(ssmbDL(2,:)+ssmbDL(3,:));
     
     %% calculate xyY and photoreceptor activations of simulated spectra
     
@@ -211,32 +194,39 @@ if resimulate == 'y'
     
     % calculate photoreceptor activations of simulated spectra
     ssSim = T_cies026_5nm*simRad;
+    ssmbSim = mb026_5nm*simRad;
+    mbSim(1,:) = ssmbSim(1,:)./(ssmbSim(2,:)+ssmbSim(3,:));
+    mbSim(2,:) = ssmbSim(3,:)./(ssmbSim(2,:)+ssmbSim(3,:));
+    mbSim(3,:) = ssmbSim(5,:)./(ssmbSim(2,:)+ssmbSim(3,:));
     
     %% calculate photoreceptor correlations of simulated spectra
     pairs = [1,2;1,3;1,4;1,5;,2,3;2,4;2,5;3,4;3,5;4,5];
     pairNames = ['S','M';'S','L';'S','R';'S','I';'M','L';'M','R';'M','I';'L','R';'L','I';'R','I'];
     for i=1:length(pairs)
-        [rho{i}, pval{i}] = corrcoef(Sim.ss(pairs(i,1),:),Sim.ss(pairs(i,2),:));
-        Sim.photoreceptorCorrelations(i) = rho{i}(1,2);
+        [rho{i}, pval{i}] = corrcoef(ssSim(pairs(i,1),:),ssSim(pairs(i,2),:));
+        photoreceptorCorrelations(i) = rho{i}(1,2);
     end
-    Sim.correlationLabels = pairNames;
+    correlationLabels = pairNames;
     
     %% save output
     
-    CRT = struct('xyYMax', xyYCRT, 'idx', idxCRT, 'rgb', rgbCRT, 'xyY', xyYCRTcombo, 'ss', ssCRTcombo);
-    DP = struct('xyYMax', xyYDP, 'idx', idxDP, 'rgb', rgbDP, 'xyY', xyYDPcombo, 'ss', ssDPcombo);
-    LCD = struct('xyYMax', xyYLCD, 'idx', idxLCD, 'rgb', rgbLCD, 'xyY', xyYLCDcombo, 'ss', ssLCDcombo);
-    % include this if you are simulating five-primary displays
-    FP1 = struct('xyYMax', xyYFP1, 'idx', idxFP1, 'rgbcm', rgbcmFP1, 'xyY', xyYFP1combo, 'ss', ssFP1combo);
-    FP2 = struct('xyYMax', xyYFP2, 'idx', idxFP2, 'rgbcm', rgbcmFP2, 'xyY', xyYFP2combo, 'ss', ssFP2combo);
-    Sim = struct('xyY', xyYSim, 'ss', ssSim);
-    SL = struct('xyY', xyYSL, 'idx', idxSL, 'ss', ssSL);
-    DL = struct('xyY', xyYDL, 'idx', idxDL, 'ss', ssDL);
+    CRT = struct('xyYMax', xyYCRT, 'idx', idxCRT, 'spd', rgbCRT);
+    DP = struct('xyYMax', xyYDP, 'idx', idxDP, 'spd', rgbDP);
+    LCD = struct('xyYMax', xyYLCD, 'idx', idxLCD, 'spd', rgbLCD);
+    FP1 = struct('xyYMax', xyYFP1, 'idx', idxFP1, 'spd', rgbcmFP1);
+    FP2 = struct('xyYMax', xyYFP2, 'idx', idxFP2, 'spd', rgbcmFP2);
+    Sim = struct('xyY', xyYSim, 'ss', ssSim, 'mb', mbSim, 'photoreceptorCorrelations', photoreceptorCorrelations, 'correlationLabels', correlationLabels);
+    SL = struct('xyY', xyYSL, 'idx', idxSL, 'ss', ssSL, 'mb', mbSL);
+    DL = struct('xyY', xyYDL, 'idx', idxDL, 'ss', ssDL, 'mb', mbDL);
     
-    save('photosimPhotoreceptorSignals.mat','CRT','DP','LCD','Sim','SL','DL','FP1','FP2');
+    save('photosimPhotoreceptorSignals.mat','CRT','DP','LCD','FP1','FP2','Sim','SL','DL');
+    
+    % clear messy variables
+    clear all;
+    % load final struct
+    load('photosimPhotoreceptorSignals.mat')
     
 %% else load the file
 else
     load('photosimPhotoreceptorSignals.mat')
-    
 end

@@ -1,9 +1,9 @@
-% README
+% README - needs updating before submission!
 
 Simulations:
-- simulatePhotoreceptorSignals: Simulate photoreceptor signals from the displays and the real world (should be the first script ran) TO DO: make this 3 primary displays only
+- simulatePhotoreceptorSignals: Simulate photoreceptor signals from the displays and the real world (should be the first script ran) 
 - simulatePhotoreceptorDistortions: Calculate distortions introduced to photoreceptor signals reproduced on displays
- after you have transformed your five primary signal space to a 3 primary representation on displays (should be the second script ran) TO DO for publishing: make this LMS only
+ after you have transformed your five primary signal space to a 3 primary representation on displays (should be the second script ran) 
 
 Data:
 -99Reflectances.csv: Data on 99 reflectance samples from IES ... used in this analysis
@@ -21,7 +21,6 @@ Functions:
 -getChromaticityReproductionMetric: Return % of real-world chromaticities that can be display in gamut for each display
 -GetCIES026: Return CIE026 spectral sensitivity functions (CITE)
 -getDaylightSpectra: Loads in daylight spectra
--getDistortionReproductionMetric: Return % of distorted LMSRI quintuplets that can be reproduced by a display
 -getPhotoreceptorCorrelationDistortionMetric: Return correlation distortion metric for each display
 -getPhotoreceptorSignalDistortionMetric: Return photoreceptor distortion metric for each display
 -getPhotoreceptorSignalDistortions: Calculate distortions introduced to each photoreceptor signal when you constrain reproduction on a 3-primary display
@@ -42,4 +41,3 @@ Plotting scripts:
 - plotMetrics: plot bar graphs showing metrics for each display
 - plotPhotoreceptorCorrelationDistortions: plot real-world photoreceptor correlations and photoreceptor correlation distortion metric - still TO DO
 - plotFundamentals: plot spectral sensitivities, primaries for each display, and XYZ - TO DO
-TO ADD: something that looks at illuminant and reflectance type

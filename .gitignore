@@ -3,3 +3,7 @@ data
 functions
 *.mat
 
+
+plots
+photosimPhotoreceptorSignals.mat
+photosimPhotoreceptorDistortions_ReproduceLMS.mat

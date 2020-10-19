@@ -15,8 +15,8 @@ load('photosimPhotoreceptorSignals.mat');
 % i.e. which signals are to be fixed - must be single photoreceptor for
 % now - I think I can just specify combos in 1st input to get Photoreceptor Signal Distortions function but need to check this
 % , but will look to implement different spaces later
-distortionMatrix = '_ReproduceSLI';
-matchedSignals = [1,3,5];
+distortionMatrix = '_ReproduceLMS';
+matchedSignals = [1,2,3];
 
 %% check if the type of distortion already exists
 fileName = ['photosimPhotoreceptorDistortions' distortionMatrix, '.mat'];
@@ -42,15 +42,36 @@ if resimulate =='y'
     T_cies026 = ss(:,11:end);
     T_cies026(isnan(T_cies026)) = 0;
     
+    % set up MacLeod-Boynton chromaticity coordinates
+    lScale = 0.69283932; 
+    mScale = 0.34967567;
+    sScale = 0.05547858;
+    % scale factors from CVRL MacLeod & Boynton (1979) 10-deg chromaticity 
+    % coordinates based on the Stockman & Sharpe (2000) cone fundamentals: http://www.cvrl.org/    
+
+    mb026(2,:) = T_cies026(2,:)*mScale;
+    mb026(3,:) = T_cies026(3,:)*lScale;
+    mb026(1,:) = T_cies026(1,:)*sScale;
+    
+    iScale = 1./max(T_cies026(5,:)./(mb026(2,:)+mb026(3,:))); % so I/L+M peaks at 1
+    mb026(5,:) = T_cies026(5,:)*iScale;
+    
+    % rescale only over range where we have cone fundmanetals i.e. 390nm:780nm
+    % scale for spds with 5nm spacing
+    mb026_5nm = mb026(:,1:5:end);
+    % remove Nans
+    mb026_5nm(isnan(mb026_5nm)) = 0;
+    mb026(isnan(mb026))=0;
+    
     % define smallest bit increment for display
     smallestBit = 1./256;
     
     % get signal distortions for five displays
-    [CRT] = getPhotoreceptorSignalDistortions(matchedSignals,Sim,CRT,CRT.rgb,T_cies026,smallestBit,3);
-    [LCD] = getPhotoreceptorSignalDistortions(matchedSignals,Sim,LCD,LCD.rgb,T_cies026,smallestBit,3);
-    [DP] = getPhotoreceptorSignalDistortions(matchedSignals,Sim,DP,DP.rgb,T_cies026,smallestBit,3);
-    [FP1] = getPhotoreceptorSignalDistortions(1:5,Sim,FP1,FP1.rgbcm,T_cies026,smallestBit,5);
-    [FP2] = getPhotoreceptorSignalDistortions(1:5,Sim,FP2,FP2.rgbcm,T_cies026,smallestBit,5);
+    [CRT] = getPhotoreceptorSignalDistortions(matchedSignals,Sim,CRT,CRT.spd,T_cies026, mb026,smallestBit,3);
+    [LCD] = getPhotoreceptorSignalDistortions(matchedSignals,Sim,LCD,LCD.spd,T_cies026, mb026,smallestBit,3);
+    [DP] = getPhotoreceptorSignalDistortions(matchedSignals,Sim,DP,DP.spd,T_cies026, mb026, smallestBit,3);
+    [FP1] = getPhotoreceptorSignalDistortions(1:5,Sim,FP1,FP1.spd,T_cies026, mb026, smallestBit,5);
+    [FP2] = getPhotoreceptorSignalDistortions(1:5,Sim,FP2,FP2.spd,T_cies026, mb026, smallestBit,5);
     
     % get photoreceptor distortion metrics for five displays
     [CRT] = getPhotoreceptorDistortionMetric(CRT,Sim);
@@ -65,20 +86,13 @@ if resimulate =='y'
     [DP] = getPSDAcrossChromaticities(DP,Sim);
     [FP1] = getPSDAcrossChromaticities(FP1,Sim);
     [FP2] = getPSDAcrossChromaticities(FP2,Sim);
-   
+    
     % get photoreceptor correlation distortions
     [CRT] = getPhotoreceptorCorrelationDistortions(CRT,Sim);
     [LCD] = getPhotoreceptorCorrelationDistortions(LCD,Sim);
     [DP] = getPhotoreceptorCorrelationDistortions(DP,Sim);
     [FP1] = getPhotoreceptorCorrelationDistortions(FP1,Sim);
     [FP2] = getPhotoreceptorCorrelationDistortions(FP2,Sim);
-    
-    % get distorted photoreceptor signal reproduction metric
-    [CRT] = getDistortionReproductionMetric(CRT,Sim);
-    [LCD] = getDistortionReproductionMetric(LCD,Sim);
-    [DP] = getDistortionReproductionMetric(DP,Sim);
-    [FP1] = getDistortionReproductionMetric(FP1,Sim);
-    [FP2] = getDistortionReproductionMetric(FP2,Sim);
     
     % get real world reproduction metric
     [CRT] = getRealWorldReproductionMetric(CRT,Sim);
@@ -97,7 +111,14 @@ if resimulate =='y'
     %% save output
     
     save(fileName,'CRT','LCD','DP','FP1','FP2','Sim','SL','DL');
+   
+    clearvars -except fileName
     
-else
     load(fileName);
+    
+    clear distortionMatric fileName matchedSignals resimulate
+else
+    % else load the file
+    load(fileName);
+    clear distortionMatrix fileName matchedSignals resimulate
 end
