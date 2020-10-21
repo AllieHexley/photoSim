@@ -10,7 +10,7 @@ clc;
      
 %% load relevant data file
 
-load('photosimPhotoreceptorDistortions_ReproduceLMS.mat');
+load('photosimMetrics_ReproduceLMS.mat');
 
 % set up colours
 CRTcol = [0,0,0];
@@ -140,7 +140,7 @@ print(fig, '..\plots\fig6diii.pdf','-dpdf');
 %% plot fig6ei - CRT Rod
 
 fig = figure('defaultAxesFontSize',12);
-h = plotDistortionsOverChromaticity(CRT,4,'PSDM_R (%)');
+h = plotDistortionsOverxy(CRT,Sim,4,'PSDM_R (%)');
 fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
@@ -150,7 +150,7 @@ print(fig, '..\plots\fig6ei.pdf','-dpdf');
 %% plot fig6eii - LCD Rod
 
 fig = figure('defaultAxesFontSize',12);
-h = plotDistortionsOverChromaticity(LCD,4,'PSDM_R (%)');
+h = plotDistortionsOverxy(LCD,Sim,4,'PSDM_R (%)');
 fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
@@ -160,7 +160,7 @@ print(fig, '..\plots\fig6eii.pdf','-dpdf');
 %% plot fig6eiii - DP Rod
 
 fig = figure('defaultAxesFontSize',12);
-h = plotDistortionsOverChromaticity(DP,4,'PSDM_R (%)');
+h = plotDistortionsOverxy(DP,Sim,4,'PSDM_R (%)');
 fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
@@ -170,7 +170,7 @@ print(fig, '..\plots\fig6eiii.pdf','-dpdf');
 %% plot fig6fi - CRT Rod
 
 fig = figure('defaultAxesFontSize',12);
-h = plotDistortionsOverChromaticity(CRT,5,'PSDM_I (%)');
+h = plotDistortionsOverxy(CRT,Sim,5,'PSDM_I (%)');
 fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
@@ -180,7 +180,7 @@ print(fig, '..\plots\fig6fi.pdf','-dpdf');
 %% plot fig6fii - LCD Rod
 
 fig = figure('defaultAxesFontSize',12);
-h = plotDistortionsOverChromaticity(LCD,5,'PSDM_I (%)');
+h = plotDistortionsOverxy(LCD,Sim,5,'PSDM_I (%)');
 fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
@@ -190,7 +190,7 @@ print(fig, '..\plots\fig6fii.pdf','-dpdf');
 %% plot fig6fiii - DP Mel
 
 fig = figure('defaultAxesFontSize',12);
-h = plotDistortionsOverChromaticity(DP,5,'PSDM_I (%)');
+h = plotDistortionsOverxy(DP,Sim,5,'PSDM_I (%)');
 fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
@@ -257,6 +257,9 @@ fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
 print(fig, '..\plots\fig6hiii.pdf','-dpdf');
 
+%%
+clear all;
+
 %% functions
 
 % plot spread
@@ -288,28 +291,76 @@ ylim([0.75,1.25]);
 box on;
 end
 
-% plot across chromaticity
-function h = plotDistortionsOverChromaticity(display,d,lab);
-    image = reshape(display.meanPhotoreceptorDistortion(d,:,:),[100,100]);
-    h=imagesc(image');
-    set(gca,'YDir','normal');
-    colormap(colorcet('D10'));
-    c=colorbar;
-    c.Label.String = lab;
-    caxis([-60,60]);
-    xticks(1:10:100);
-    xticklabels(0:0.1:1);
-    yticks(1:10:100);
-    yticklabels(0:0.1:1);
-    axis square
-    box on;
-    grid on;
-end
+% % plot across chromaticity
+% function h = plotDistortionsOverChromaticity(display,d,lab);
+%     image = reshape(display.meanPhotoreceptorDistortion(d,:,:),[100,100]);
+%     h=imagesc(image');
+%     set(gca,'YDir','normal');
+%     colormap(colorcet('D10'));
+%     c=colorbar;
+%     c.Label.String = lab;
+%     caxis([-60,60]);
+%     xticks(1:10:100);
+%     xticklabels(0:0.1:1);
+%     yticks(1:10:100);
+%     yticklabels(0:0.1:1);
+%     axis square
+%     box on;
+%     grid on;
+% end
 
-% plot across MacLeod-Boynton
+function h = plotDistortionsOverxy(display,Sim,d,lab);
+% calculate binned distortions across xy space
+% inputs:
+% 1) structure of display
+% 2) structure of simulated real world spectra
+
+% outputs:
+% display structure containing fields for distorted photoreceptor signals
+% of real-world spectra across chromaticity space
+
+% loop over CIExy diagram split into a 100x100 grid and find mean distortion
+% for each photoreceptor of all real-world spectra with a chromaticity that
+% falls into a particular grid
+xStep=0.01;
+yStep=0.01;
+i=1; j=1;
+x=0:0.01:0.99; y = 0:0.01:0.99;
+for i=1:100
+    for j=1:100
+        xyDistortions(i,j)=mean(display.distortionMetric(d,Sim.xyY(1,:)>x(i) & Sim.xyY(1,:)<x(i)+xStep & Sim.xyY(2,:)>y(j) & Sim.xyY(2,:)<y(j)+yStep));
+    end
+end
+xyDistortions(isnan(xyDistortions)==1)=0;
+h=imagesc(xyDistortions');
+set(gca,'YDir','normal');
+colormap(colorcet('D10'));
+c=colorbar;
+c.Label.String = lab;
+caxis([-60,60]);
+xticks(1:10:100);
+xticklabels(0:0.1:1);
+yticks(1:10:100);
+yticklabels(0:0.1:1);
+axis square
+box on;
+grid on;
+end
 
 function h=plotDistortionsOverMB(display,d,lab);
 % calculate binned distortions across MB space
+% inputs:
+% 1) structure of display
+% 2) d=which photoreceptor distortion to plot
+% 3) lab = label of plot
+
+% outputs:
+% display structure containing fields for distorted photoreceptor signals
+% of real-world spectra across chromaticity space
+
+% loop over CIExy diagram split into a 100x100 grid and find mean distortion
+% for each photoreceptor of all real-world spectra with a chromaticity that
+% falls into a particular grid
 lStep = 0.01;
 sStep = 0.01;
 mbx = 0:0.01:1;

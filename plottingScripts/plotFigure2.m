@@ -10,7 +10,7 @@ clc;
      
 %% load relevant data file
 
-load('photosimPhotoreceptorDistortions_ReproduceLMS.mat');
+load('photosimMetrics_ReproduceLMS.mat');
 
 %% plot fig2a - Correlation scatter plots
 
@@ -31,6 +31,10 @@ fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
 print(fig, '..\plots\fig2b.pdf','-dpdf');
+
+%%
+
+clear all
 
 %% functions
 

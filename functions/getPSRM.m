@@ -1,7 +1,7 @@
 % function to find the distorted reproduction metric
 % created by ACH 01/07/2020
       
-function [display] = getRealWorldReproductionMetric(display,Sim);
+function [display] = getPSRM(display,Sim);
 
 % inputs:
 % 1) structure of display

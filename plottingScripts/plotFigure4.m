@@ -9,7 +9,7 @@ clc;
      
 %% load relevant data file
 
-load('photosimPhotoreceptorDistortions_ReproduceLMS.mat');
+load('photosimMetrics_ReproduceLMS.mat');
 
 %% plot Fig3a - CRT primaries
 
@@ -44,7 +44,7 @@ print(fig, '..\plots\fig4c.pdf','-dpdf');
 %% plot Fig3d - Broadband five primary primaries
 
 fig = figure('defaultAxesFontSize',12);
-plotDisplayPrimariesMultiPrimary(FP1)
+plotDisplayPrimariesMultiPrimary(nb5p)
 fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
@@ -54,12 +54,15 @@ print(fig, '..\plots\fig4d.pdf','-dpdf');
 %% plot Fig3e - Narrowband five primary primaries
 
 fig = figure('defaultAxesFontSize',12);
-plotDisplayPrimariesMultiPrimary(FP2)
+plotDisplayPrimariesMultiPrimary(bb5p)
 fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
 print(fig, '..\plots\fig4e.pdf','-dpdf');
+
+%%
+clear all;
 
 %% functions
 

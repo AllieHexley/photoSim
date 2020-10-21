@@ -2,7 +2,7 @@
 % trying to reproduce the real-world spectra on a display
 % created by ACH 01/07/2020
       
-function [display] = getPhotoreceptorSignalDistortions(matchedSignals,Sim,display,displayPrimaries,T_cies026,mb026,smallestBit,nPrimaries);
+function [display] = getDistortions(matchedSignals,Sim,display,displayPrimaries,T_cies026,mb026,smallestBit,nPrimaries);
 
 % inputs:
 % 1) which photoreceotpr signals to match, vector including elements from 1-5 where 1=S;2=M;3=L;4=R;5=I

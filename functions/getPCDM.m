@@ -1,7 +1,7 @@
 % function to find the photoreceptor correlation distortions
 % created by ACH 01/07/2020
       
-function [display] = getPhotoreceptorCorrelationDistortions(display,Sim);
+function [display] = getPCDM(display,Sim);
 
 % inputs:
 % 1) structure of display

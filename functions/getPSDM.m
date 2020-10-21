@@ -1,7 +1,7 @@
 % function to calculate the photoreceptor distortion metric
 % created by ACH 01/07/2020
 
-function [display] = getPhotoreceptorDistortionMetric(display,Sim)
+function [display] = getPSDM(display,Sim)
 
 % inputs:
 % 1) structure of display

@@ -9,14 +9,14 @@ clc;
      
 %% load relevant data file
 
-load('photosimPhotoreceptorDistortions_ReproduceLMS.mat');
+load('photosimMetrics_ReproduceLMS.mat');
 
 % set up colours
 CRTcol = [0,0,0];
 LCDcol = [0.2,0.2,0.2];
 DPcol = [0.6,0.6,0.6];
-FP1col = [0, 0.8, 0];
-FP2col = [0, 0, 0.8];
+nb5pcol = [0, 0.8, 0];
+bb5pcol = [0, 0, 0.8];
 
 %% plot fig8ai - MB space real world
 
@@ -165,7 +165,7 @@ print(fig, '..\plots\fig8diii.pdf','-dpdf');
 %% plot fig8aii - MB space real world
 
 fig = figure('defaultAxesFontSize',12);
-plotMBSpace(FP1,2,1,FP1col,Sim)
+plotMBSpace(nb5p,2,1,nb5pcol,Sim)
 xlabel('L/(L+M)');
 ylabel('S/(L+M)');
 fig.PaperUnits = 'inches';
@@ -177,7 +177,7 @@ print(fig, '..\plots\fig8ei.pdf','-dpdf');
 %% plot fig8aii - MB space real world
 
 fig = figure('defaultAxesFontSize',12);
-plotMBSpace(FP1,2,3,FP1col,Sim)
+plotMBSpace(nb5p,2,3,nb5pcol,Sim)
 xlabel('L/(L+M)');
 ylabel('I/(L+M)');
 fig.PaperUnits = 'inches';
@@ -189,7 +189,7 @@ print(fig, '..\plots\fig8eii.pdf','-dpdf');
 %% plot fig8aii - MB space real world
 
 fig = figure('defaultAxesFontSize',12);
-plotMBSpace(FP1,3,1,FP1col,Sim)
+plotMBSpace(nb5p,3,1,nb5pcol,Sim)
 xlabel('I/(L+M)');
 ylabel('S/(L+M)');
 fig.PaperUnits = 'inches';
@@ -201,7 +201,7 @@ print(fig, '..\plots\fig8eiii.pdf','-dpdf');
 %% plot fig8aii - MB space real world
 
 fig = figure('defaultAxesFontSize',12);
-plotMBSpace(FP2,2,1,FP2col,Sim)
+plotMBSpace(bb5p,2,1,bb5pcol,Sim)
 xlabel('L/(L+M)');
 ylabel('S/(L+M)');
 fig.PaperUnits = 'inches';
@@ -213,7 +213,7 @@ print(fig, '..\plots\fig8fi.pdf','-dpdf');
 %% plot fig8aii - MB space real world
 
 fig = figure('defaultAxesFontSize',12);
-plotMBSpace(FP2,2,3,FP2col,Sim)
+plotMBSpace(bb5p,2,3,bb5pcol,Sim)
 xlabel('L/(L+M)');
 ylabel('I/(L+M)');
 fig.PaperUnits = 'inches';
@@ -225,7 +225,7 @@ print(fig, '..\plots\fig8fii.pdf','-dpdf');
 %% plot fig8aii - MB space real world
 
 fig = figure('defaultAxesFontSize',12);
-plotMBSpace(FP2,3,1,FP2col,Sim)
+plotMBSpace(bb5p,3,1,bb5pcol,Sim)
 xlabel('I/(L+M)');
 ylabel('S/(L+M)');
 fig.PaperUnits = 'inches';
@@ -233,6 +233,9 @@ fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
 print(fig, '..\plots\fig8fiii.pdf','-dpdf');
+
+%%
+clear all;
 
 %% functions
 

@@ -12,7 +12,7 @@ addpath('functions');
 
 %% check if file already exists, and ask user if they want to re-run simulation
 
-if exist('photosimPhotoreceptorSignals.mat') == 2
+if exist('photosimReferenceDatabase.mat') == 2
     % if file exists, ask user if they just want to load in file
     resimulate = input('Do you want to re-run the simulation (y/n)? ','s');
 else
@@ -76,50 +76,49 @@ if resimulate == 'y'
     
     %% simulate a hypothetical narrowband 5-primary display
     
-    fp1R = normpdf(390:780,450,(10./2.355));
-    fp1G = normpdf(390:780,500,(10./2.355));
-    fp1B = normpdf(390:780,550,(10./2.355));
-    fp1C = normpdf(390:780,600,(10./2.355));
-    fp1M = normpdf(390:780,650,(10./2.355));
-    wlsFP1 = [390:780];
-    rgbcmFP1 = [fp1R',fp1G',fp1B',fp1C',fp1M'];
+    nb5pR = normpdf(390:780,450,(10./2.355));
+    nb5pG = normpdf(390:780,500,(10./2.355));
+    nb5pB = normpdf(390:780,550,(10./2.355));
+    nb5pC = normpdf(390:780,600,(10./2.355));
+    nb5pM = normpdf(390:780,650,(10./2.355));
+    wlsnb5p = [390:780];
+    rgbcmnb5p = [nb5pR',nb5pG',nb5pB',nb5pC',nb5pM'];
     
     % noramlise so area under primaries is 1
-    for i=1:size(rgbcmFP1,2)
+    for i=1:size(rgbcmnb5p,2)
         % calculate integral of illuminant spectra
-        A(i) = trapz(wlsFP1, rgbcmFP1(:,i));
-        rgbcmFP1(:,i) = rgbcmFP1(:,i)./A(i);
+        A(i) = trapz(wlsnb5p, rgbcmnb5p(:,i));
+        rgbcmnb5p(:,i) = rgbcmnb5p(:,i)./A(i);
     end
     
     % calculate xyY coordinates of primaries on max of LCD
-    xyYFP1 = XYZToxyY(T_xyz*rgbcmFP1);
-    idxFP1 = convhull(xyYFP1(1,:), xyYFP1(2,:));
+    xyYnb5p = XYZToxyY(T_xyz*rgbcmnb5p);
+    idxnb5p = convhull(xyYnb5p(1,:), xyYnb5p(2,:));
     
     %% simulate a hypothetical broadband 8-bit 5-primary display
     
-    fp2R = normpdf(390:780,450,(40./2.355));
-    fp2G = normpdf(390:780,500,(40./2.355));
-    fp2B = normpdf(390:780,550,(40./2.355));
-    fp2C = normpdf(390:780,600,(40./2.355));
-    fp2M = normpdf(390:780,650,(40./2.355));
-    wlsFP2 = [390:780];
-    rgbcmFP2 = [fp2R',fp2G',fp2B',fp2C',fp2M'];
+    bb5pR = normpdf(390:780,450,(40./2.355));
+    bb5pG = normpdf(390:780,500,(40./2.355));
+    bb5pB = normpdf(390:780,550,(40./2.355));
+    bb5pC = normpdf(390:780,600,(40./2.355));
+    bb5pM = normpdf(390:780,650,(40./2.355));
+    wlsbb5p = [390:780];
+    rgbcmbb5p = [bb5pR',bb5pG',bb5pB',bb5pC',bb5pM'];
     
     % noramlise so area under primaries is 1
-    for i=1:size(rgbcmFP2,2)
+    for i=1:size(rgbcmbb5p,2)
         % calculate integral of illuminant spectra
-        A(i) = trapz(wlsFP2, rgbcmFP2(:,i));
-        rgbcmFP2(:,i) = rgbcmFP2(:,i)./A(i);
+        A(i) = trapz(wlsbb5p, rgbcmbb5p(:,i));
+        rgbcmbb5p(:,i) = rgbcmbb5p(:,i)./A(i);
     end
     
     % calculate xyY coordinates of primaries on max of LCD
-    xyYFP2 = XYZToxyY(T_xyz*rgbcmFP2);
-    idxFP2 = convhull(xyYFP2(1,:), xyYFP2(2,:));
+    xyYbb5p = XYZToxyY(T_xyz*rgbcmbb5p);
+    idxbb5p = convhull(xyYbb5p(1,:), xyYbb5p(2,:));
     
     %% get spectral and daylight locus
     
     slRad = getSpectralLocusSpectra(390:780); % get spectral locus from 390:780
-    dlRad = getDaylightSpectra;
     
     %% get simulated radiant spectra
     
@@ -174,19 +173,6 @@ if resimulate == 'y'
     mbSL(2,:) = ssmbSL(3,:)./(ssmbSL(2,:)+ssmbSL(3,:));
     mbSL(3,:) = ssmbSL(5,:)./(ssmbSL(2,:)+ssmbSL(3,:));
     
-    %% calculate xyY and photoreceptor activations of daylight locus
-    
-    % calculate xyY coordinates of daylight locus
-    xyYDL = XYZToxyY(T_xyz_5nm*dlRad);
-    idxDL = convhull(xyYDL(1,:), xyYDL(2,:));
-    
-    % calculate photoreceptor activations of daylight locus
-    ssDL = T_cies026_5nm*dlRad;
-    ssmbDL = mb026_5nm*dlRad;
-    mbDL(1,:) = ssmbDL(1,:)./(ssmbDL(2,:)+ssmbDL(3,:));
-    mbDL(2,:) = ssmbDL(3,:)./(ssmbDL(2,:)+ssmbDL(3,:));
-    mbDL(3,:) = ssmbDL(5,:)./(ssmbDL(2,:)+ssmbDL(3,:));
-    
     %% calculate xyY and photoreceptor activations of simulated spectra
     
     % calculate xyY coordinates of simulated spectra
@@ -213,20 +199,19 @@ if resimulate == 'y'
     CRT = struct('xyYMax', xyYCRT, 'idx', idxCRT, 'spd', rgbCRT);
     DP = struct('xyYMax', xyYDP, 'idx', idxDP, 'spd', rgbDP);
     LCD = struct('xyYMax', xyYLCD, 'idx', idxLCD, 'spd', rgbLCD);
-    FP1 = struct('xyYMax', xyYFP1, 'idx', idxFP1, 'spd', rgbcmFP1);
-    FP2 = struct('xyYMax', xyYFP2, 'idx', idxFP2, 'spd', rgbcmFP2);
+    nb5p = struct('xyYMax', xyYnb5p, 'idx', idxnb5p, 'spd', rgbcmnb5p);
+    bb5p = struct('xyYMax', xyYbb5p, 'idx', idxbb5p, 'spd', rgbcmbb5p);
     Sim = struct('xyY', xyYSim, 'ss', ssSim, 'mb', mbSim, 'photoreceptorCorrelations', photoreceptorCorrelations, 'correlationLabels', correlationLabels);
     SL = struct('xyY', xyYSL, 'idx', idxSL, 'ss', ssSL, 'mb', mbSL);
-    DL = struct('xyY', xyYDL, 'idx', idxDL, 'ss', ssDL, 'mb', mbDL);
     
-    save('photosimPhotoreceptorSignals.mat','CRT','DP','LCD','FP1','FP2','Sim','SL','DL');
+    save('photosimReferenceDatabase.mat','CRT','DP','LCD','nb5p','bb5p','Sim','SL');
     
     % clear messy variables
     clear all;
     % load final struct
-    load('photosimPhotoreceptorSignals.mat')
+    load('photosimReferenceDatabase.mat')
     
 %% else load the file
 else
-    load('photosimPhotoreceptorSignals.mat')
+    load('photosimReferenceDatabase.mat')
 end

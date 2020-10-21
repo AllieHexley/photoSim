@@ -299,3 +299,6 @@ fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
 print(fig, '..\plots\fig1j.pdf','-dpdf');
+
+%%
+clear all;
