@@ -1,3 +1,4 @@
+._*
 plots
-photosimPhotoreceptorSignals.mat
-photosimPhotoreceptorDistortions_ReproduceLMS.mat
+photosimMetrics_ReproduceLMS.mat
+photosimReferenceDatabase.mat
