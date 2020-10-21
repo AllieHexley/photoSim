@@ -1,9 +1,13 @@
 % README
 % Created by ACH 21/10/2020
 
+To run the photosim toolbox, you need to first simulate your reference database, which you can do by running simulateReferenceDatabase.m first.
+You then need to run the metrics to compare the displays to the real-world spectra, which you do by running runMetrics.m
+You can visaulize the results by running the plotting scripts. The component function can be found in the dunctions folder.
+
 Simulations:
 - simulateReferenceDatabase: (first script to run) Generate real-world spectra, display spectra, and calculate photoreceptor excitations and MacLeod-Boynton coorindates from real-world spectra
-- simulatePhotoreceptorDistortions: (second script to run) Calculate metrics on dataset
+- runMetrics: (second script to run) Calculate metrics on dataset
 
 Data:
 -99Reflectances.csv: Data on 99 reflectance samples from IES TM-30-2015 used in this analysis
@@ -18,26 +22,16 @@ Data:
 Functions:
 -colorcet: Function to make perceptually unifrom colormaps (Peter Kovesi. Good Colour Maps: How to Design Them.
 arXiv:1509.03700 [cs.GR] 2015)
--getChromaticityReproductionMetric: Return % of real-world chromaticities that can be display in gamut for each display
--GetCIES026: Return CIE026 spectral sensitivity functions (CITE)
--getDaylightSpectra: Loads in daylight spectra
--getPhotoreceptorCorrelationDistortionMetric: Return correlation distortion metric for each display
--getPhotoreceptorSignalDistortionMetric: Return photoreceptor distortion metric for each display
--getPhotoreceptorSignalDistortions: Calculate distortions introduced to each photoreceptor signal when you constrain reproduction on a 3-primary display
--getPSDAcrossChromaticities: Find mean photoreceptor distortion metric for all of the real-world spectra that fall within each gridpoint in chromaticity coordinates
--getRealWorldReproductionMetric: Return % of real-world (undistorted) LMSRI quintuplets that can be reproduced by a display (to a specified degree of accuracy)
 -getSimulatedSpectra: Generate radiance spectra of the 401 illuminants from the 99 surfaces
 -getSpectralLocusSpectra: Generate spectral locus over specified wavelength range
 -normIllSpd: Normalize illuminant spectra to habe unit area
--XYZToxyY: Convert CIE 2015 XYZ coordinates to CIE xyY chromaticity coordinates (CITE)
+-XYZToxyY: Convert CIE 2015 XYZ coordinates to CIE xyY chromaticity coordinates (http://psychtoolbox.org/docs/XYZToxyY)
+-GetCIES026: Return CIE026 spectral sensitivity functions (https://github.com/spitschan/SilentSubstitutionToolbox/blob/master/PhotoreceptorSensitivity/GetCIES026.m)
+-getDistortions: Calculate distortions introduced to each photoreceptor signal when you constrain reproduction on a 3-primary display
+-getColourGamut: Return % of real-world chromaticities that can be displayed in gamut for each display
+-getPSRM: Return photoreceptor reproduction metric, PSRM, i.e. % of real-world (undistorted) LMSRI quintuplets that can be reproduced by a display (to a specified degree of accuracy)
+-getPSDM: Return photoreceptor distortion metric, PSDM, for each display
+-getPCDM: Return correlation distortion metric, PCDM, for each display
 
 Plotting scripts:
-- plotChromaticityReproduction: plot real-world chromaticities on CIE xy diagram along with CIE xy gamut of displays
-- visualizeChromaticityReproduction: visualize the MacBeth colour checker chart chromaticities after distorting photoreceptor signals to visualize chromatic distortions that may have been introduced - still TO DO
-- plotPhotoreceptorSignalDistortions: plot reproduced photoreceptor signal vs real-world photoreceptor signals 
-- plotPSDMHistograms: plot hisotgrams showing the spread of the photoreceptor signal distortion metric
-- plotPSDMAcrossChromaticity: plot photoreceptor signal distortion metric across chromaticity diagram
-- plotPhotoreceptorSignalDistortionsMB: plot real-world and distorted photoreceptor signals in MacLeod-Boynton space
-- plotMetrics: plot bar graphs showing metrics for each display
-- plotPhotoreceptorCorrelationDistortions: plot real-world photoreceptor correlations and photoreceptor correlation distortion metric - still TO DO
-- plotFundamentals: plot spectral sensitivities, primaries for each display, and XYZ - TO DO
+-Plots figures from <INSERT REF> paper; see manuscript for figure descriptions
