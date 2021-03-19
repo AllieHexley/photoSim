@@ -4387,7 +4387,8 @@ map = [0.066001 0.066024 0.066019
 case { 'L17'  'KBGYW' }
 descriptorname = 'linear_worb_100-25_c53_n256';
 description = 'White-Orange-Red-Blue, decreasing lightness with increasing saturation';
-map = [0.999862 1.000000 1.000000
+%map = [0.999862 1.000000 1.000000
+map = [0.75 0.75 0.75
        0.998126 0.997011 0.988965
        0.996350 0.993970 0.977925
        0.994541 0.990931 0.966900

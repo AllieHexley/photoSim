@@ -17,19 +17,19 @@ load('photosimMetrics_ReproduceLMS.mat');
 fig = figure('defaultAxesFontSize',12);
 plotRealWorldCorrelations(Sim)
 fig.PaperUnits = 'inches';
-fig.PaperSize = [3.1,3.1];
+fig.PaperSize = [4.1,4.1];
 fig.PaperPositionMode = 'manual';
-fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, '..\plots\fig2a.pdf','-dpdf');
+fig.PaperPosition=[0.1 0.1 4 4];
+print(fig, '..\plots\fig2a.png','-dpng');
 
 %% plot fig2b -  Correlation matrix
 
 fig = figure('defaultAxesFontSize',12);
 plotRealWorldCorrelationHeatmaps(Sim)
 fig.PaperUnits = 'inches';
-fig.PaperSize = [3.1,3.1];
+fig.PaperSize = [4.1,4.1];
 fig.PaperPositionMode = 'manual';
-fig.PaperPosition=[0.1 0.1 3 3];
+fig.PaperPosition=[0.1 0.1 4 4];
 print(fig, '..\plots\fig2b.pdf','-dpdf');
 
 %%
@@ -92,7 +92,7 @@ c=1;
 for i=1:5
     for j=1:5
         if ismember(c,i2K)==1
-            text(i-0.4,j,['\rho:',num2str(round(correlationsTable(j,i),2))],'FontSize',8);
+            text(i-0.2,j,[num2str(round(correlationsTable(j,i),2))],'FontSize',10);
         end
         c=c+1;
     end
@@ -101,7 +101,9 @@ axis square
 myColorMap = parula(256);
 %myColorMap(1,:) = 1;
 colormap(colorcet('gray'));%myColorMap);
-colorbar;
+hcb = colorbar;
+ylabel(hcb,'\rho','FontSize',12,'Rotation',270);
+hcb.Label.Position(1) = 3.5;
 xticks([1:5]);
 xticklabels(['S';'M';'L';'R';'I']);
 yticks([1:5]);

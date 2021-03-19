@@ -9,6 +9,7 @@ close all;
 clc;
 addpath('data');
 addpath('functions');
+addpath(genpath(pwd));
 
 %% check if file already exists, and ask user if they want to re-run simulation
 
@@ -25,7 +26,8 @@ end
 % else load the file
     
 if resimulate == 'y'
-
+    disp('Generating real world reference database and retrieving display calibration data...')
+    disp('...this script should only take a few seconds to run...')
     %% set up colorimetry
     % Get the CIE 2015 10degree XYZ functions
     T_xyz = csvread('data/lin2012xyz10e_1_7sf.csv');
@@ -150,7 +152,7 @@ if resimulate == 'y'
     mb026(3,:) = T_cies026(3,:)*lScale;
     mb026(1,:) = T_cies026(1,:)*sScale;
     
-    iScale = 1./max(T_cies026(5,:)./(mb026(2,:)+mb026(3,:))); % so I/L+M peaks at 1
+    iScale = 1./(max(T_cies026(5,:)./(mb026(2,:)+mb026(3,:)))); % scale melanopsin spectral sensitivity so that I/L+M peaks at 1
     mb026(5,:) = T_cies026(5,:)*iScale;
     
     % rescale only over range where we have cone fundmanetals i.e. 390nm:780nm
@@ -210,8 +212,10 @@ if resimulate == 'y'
     clear all;
     % load final struct
     load('photosimReferenceDatabase.mat')
-    
+    disp('...done')
 %% else load the file
 else
+    disp('Loading file...')
     load('photosimReferenceDatabase.mat')
+    disp('...done')
 end

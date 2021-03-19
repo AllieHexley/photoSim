@@ -87,11 +87,11 @@ end
 function plotDisplayPrimariesMultiPrimary(display)
 
 hold on;
-h(1)=plot(390:780,display.spd(:,1),'Color',[0.5,0,0],'LineWidth',2);
-h(2)=plot(390:780,display.spd(:,2),'Color',[0,0.5,0],'LineWidth',2);
-h(3)=plot(390:780,display.spd(:,5),'Color',[0,0,0.5],'LineWidth',2);
-h(3)=plot(390:780,display.spd(:,4),'Color',[0.4940,0.1840,0.5560],'LineWidth',2);
-h(3)=plot(390:780,display.spd(:,3),'Color',[0.9290,0.6940,0.1250],'LineWidth',2);
+h(1)=plot(390:780,display.spd(:,5),'Color',[0.5,0,0],'LineWidth',2);
+h(2)=plot(390:780,display.spd(:,3),'Color',[0,0.5,0],'LineWidth',2);
+h(3)=plot(390:780,display.spd(:,2),'Color',[0,0,0.5],'LineWidth',2);
+h(3)=plot(390:780,display.spd(:,1),'Color',[0.4940,0.1840,0.5560],'LineWidth',2);
+h(3)=plot(390:780,display.spd(:,4),'Color',[0.9290,0.6940,0.1250],'LineWidth',2);
 xlabel('Wavelength (nm)');
 ylabel('Relative Power');
 yticklabels({});

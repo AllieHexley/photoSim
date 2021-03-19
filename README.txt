@@ -3,11 +3,11 @@
 
 To run the photosim toolbox, you need to first simulate your reference database, which you can do by running simulateReferenceDatabase.m first.
 You then need to run the metrics to compare the displays to the real-world spectra, which you do by running runMetrics.m
-You can visualize the results by running the plotting scripts. The component function can be found in the functions folder.
+You can visualize the results by running the plotting scripts. The component functions can be found in the functions folder.
 
 Simulations:
 - simulateReferenceDatabase: (first script to run) Generate real-world spectra, display spectra, and calculate photoreceptor excitations and MacLeod-Boynton coorindates from real-world spectra
-- runMetrics: (second script to run) Calculate metrics on dataset
+- runMetrics: (second script to run) Calculate "photosim" metrics for given displays
 
 Data:
 -99Reflectances.csv: Data on 99 reflectance samples from IES TM-30-2015 used in this analysis
@@ -34,4 +34,4 @@ arXiv:1509.03700 [cs.GR] 2015)
 -getPCDM: Return correlation distortion metric, PCDM, for each display
 
 Plotting scripts:
--Plots figures from <INSERT REF> paper; see manuscript for figure descriptions
+-Plots figures from corresponding manuscript: https://doi.org/10.1101/2021.02.27.433203; see manuscript for figure descriptions

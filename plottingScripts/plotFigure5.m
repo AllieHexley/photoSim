@@ -23,12 +23,12 @@ h(3)=plotChromaticityReproduction(DP,[0.6,0.6,0.6]);
 h(4)=plotChromaticityReproduction(nb5p,[0,0.8,0]);
 h(5)=plotChromaticityReproduction(bb5p,[0,0,0.8]);
 xlabel('CIE x'); ylabel('CIE y');
-%legend(h,{'CRT','LCD','Display++','Narrowband 5P', 'Broadband 5p'});
+legend(h,{'CRT','LCD','Display++','Narrowband 5P', 'Broadband 5p'});
 fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, '..\plots\fig5a.pdf','-dpdf');
+print(fig, '..\plots\fig5aLegend.pdf','-dpdf');
 
 %% plot fig5b - Reproduction of chromaticity bar graph
 
@@ -38,7 +38,7 @@ xticklabels({'CRT','Dell LCD','Display++', 'NB 5P', 'BB 5P'});
 xlim([0.5,5.5]);
 xtickangle(45);
 ylabel('Chromaticity Reproduction (%)');
-ylim([0,100]);
+ylim([0,104]);
 axis square
 grid on;
 box on;
@@ -56,7 +56,7 @@ xticklabels({'CRT','Dell LCD','Display++', 'NB 5P', 'BB 5P'});
 xlim([0.5,5.5]);
 xtickangle(45);
 ylabel('PSRM (%)');
-ylim([0,100]);
+ylim([0,104]);
 axis square
 grid on;
 box on;

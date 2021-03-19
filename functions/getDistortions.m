@@ -58,7 +58,7 @@ function [display] = getDistortions(matchedSignals,Sim,display,displayPrimaries,
         else
             display.ssReproducible(:,i)=1;
         end
-        
+        display.ssReproducible = logical(display.ssReproducible);
     end
     
 end

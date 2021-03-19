@@ -14,14 +14,16 @@ T_cies026(isnan(T_cies026)) = 0;
 lCol = [.5 0 0]; mCol = [0 0.5 0]; sCol = [0 0 .5];
 rCol = [0 0.5 0.5]; iCol = [0.5 0 .5];
 
-%% plot Fig1a - cone spectral sensitivities
+%% plot Fig1a - spectral sensitivities of S,M,L,R,I
 
 fig = figure('defaultAxesFontSize',12);
 hold on;
 h(1)=plot(390:780,T_cies026(1,:),'Color',sCol,'LineWidth',2);
 h(2)=plot(390:780,T_cies026(2,:),'Color',mCol,'LineWidth',2);
 h(3)=plot(390:780,T_cies026(3,:),'Color',lCol,'LineWidth',2);
-legend(h,{'S','M','L'});
+h(4)=plot(390:780,T_cies026(4,:),'Color',rCol,'LineWidth',2);
+h(5)=plot(390:780,T_cies026(5,:),'Color',iCol,'LineWidth',2);
+legend(h,{'S','M','L','R','I'});
 xlabel('Wavelength (nm)');
 ylabel('Spectral Sensitivity');
 yticklabels({});
@@ -95,12 +97,11 @@ fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
 print(fig, '..\plots\fig1c.pdf','-dpdf');
 
-%% calculate cone responses to worldSpd and display
+%% calculate cone, rod, and melanopsin responses to worldSpd and display
 lmsworldSpd = T_cies026(1:3,:)*worldSpd; % lms from worldSpd
 LMS2RGB = T_cies026(1:3,:)*spd; % get RGB->LMS conversion for display
 rgb = inv(LMS2RGB) * lmsworldSpd; % calculate RGB needed to match LMS to worldSpd
 dispspd = rgb(1).*spd(:,1)+rgb(2).*spd(:,2)+rgb(3).*spd(:,3); % calculate output spectrum of display
-lms3PDisp = T_cies026(1:3,:)*dispspd; % lms from display output
 lmsri3PDisp = T_cies026*dispspd;
 lmsriworldSpd = T_cies026*worldSpd;
 
@@ -123,22 +124,26 @@ fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
 print(fig, '..\plots\fig1d.pdf','-dpdf');
 
-%% Fig 1e - cone responses to real-world spectrum and display spectrum
+%% Fig 1e - cone, rod, and melanopsin responses to real-world spectrum and display spectrum
 
 fig = figure('defaultAxesFontSize',12);
-b = bar([lmsworldSpd'; lms3PDisp']','LineWidth',1.5);
+b = bar([lmsriworldSpd'; lmsri3PDisp']','LineWidth',1.5);
 b(1,1).FaceColor = 'flat';
 b(1,1).EdgeColor = [0 0 0];
 b(1,1).CData(3,:) = [.5 0 0];
 b(1,1).CData(2,:) = [0 .5 0];
 b(1,1).CData(1,:) = [0 0 .5];
+b(1,1).CData(4,:) = rCol;
+b(1,1).CData(5,:) = iCol;
 b(1,2).FaceColor = 'flat';
 b(1,2).EdgeColor = [0.5 0.5 0.5];
 b(1,2).CData(3,:) = [.5 0 0];
 b(1,2).CData(2,:) = [0 .5 0];
 b(1,2).CData(1,:) = [0 0 .5];
-xticklabels({'S','M','L'});
-xlim([0.5,3.5]);
+b(1,2).CData(4,:) = rCol;
+b(1,2).CData(5,:) = iCol;
+xticklabels({'S','M','L','R','I'});
+xlim([0.5,5.5]);
 ylabel('Photoreceptor Response');
 ylim([0,0.085]);
 yticklabels({});
@@ -151,59 +156,7 @@ fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
 print(fig, '..\plots\fig1e.pdf','-dpdf');
 
-%% Fig 1f - plot LMSRI spectral sensitivities
-
-fig = figure('defaultAxesFontSize',12);
-hold on;
-h(1)=plot(390:780,T_cies026(4,:),'Color',rCol,'LineWidth',2);
-h(2)=plot(390:780,T_cies026(5,:),'Color',iCol,'LineWidth',2);
-legend(h,{'R','I'});
-xlabel('Wavelength (nm)');
-ylabel('Spectral Sensitivity');
-yticklabels({});
-xticks([400,500,600,700]);
-xticklabels({'400','500','600','700'});
-xlim([390,780]);
-axis square
-grid on;
-box on;
-fig.PaperUnits = 'inches';
-fig.PaperSize = [3.1,3.1];
-fig.PaperPositionMode = 'manual';
-fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, '..\plots\fig1f.pdf','-dpdf');
-
-%% calculate cone responses to real world spectrum and display
-ri3PDisp = T_cies026(4:5,:)*dispspd;
-riworldSpd = T_cies026(4:5,:)*worldSpd;
-
-%% Fig 1g - rod and mel responses to real-world spectrum and display spectrum
-
-fig = figure('defaultAxesFontSize',12);
-b = bar([riworldSpd'; ri3PDisp']','LineWidth',1.5);
-b(1,1).FaceColor = 'flat';
-b(1,1).EdgeColor = [0 0 0];
-b(1,1).CData(2,:) = iCol;
-b(1,1).CData(1,:) = rCol;
-b(1,2).FaceColor = 'flat';
-b(1,2).EdgeColor = [0.6 0.6 0.6];
-b(1,2).CData(2,:) = iCol;
-b(1,2).CData(1,:) = rCol;
-xticklabels({'R','I'});
-xlim([0.5,2.5]);
-ylabel('Photoreceptor Response');
-ylim([0,0.085]);
-yticklabels({});
-axis square
-grid on;
-box on;
-fig.PaperUnits = 'inches';
-fig.PaperSize = [3.1,3.1];
-fig.PaperPositionMode = 'manual';
-fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, '..\plots\fig1g.pdf','-dpdf');
-
-%%  plot Fig1h - example five primary display primaries
+%%  plot Fig1f - example five primary display primaries
 
 fig = figure('defaultAxesFontSize',12);
 % generate daylight spectrum
@@ -240,16 +193,16 @@ fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, '..\plots\fig1h.pdf','-dpdf');
+print(fig, '..\plots\fig1f.pdf','-dpdf');
 
-%% calculate cone responses to five primary display display
+%% calculate cone, rod, and melanopsin responses to five primary display display
 lmsriworldSpd = T_cies026*worldSpd; % lms from worldSpd
 LMSRI2RGBCM = T_cies026*spd5; % get RGB->LMS conversion for display
 rgbcm = inv(LMSRI2RGBCM) * lmsriworldSpd; % calculate RGB needed to match LMS to worldSpd
 dispspd5 = rgbcm(1).*spd5(:,1)+rgbcm(2).*spd5(:,2)+rgbcm(3).*spd5(:,3)+rgbcm(4).*spd5(:,4)+rgbcm(5).*spd5(:,5); % calculate output spectrum of display
-lmsri5PDisp = T_cies026*dispspd5; % lms from display output
+lmsri5PDisp = T_cies026*dispspd5; % lmsri from display output
 
-%% plot Fig 1i - spectral output of 5P display
+%% plot Fig 1g - spectral output of 5P display
 
 fig = figure('defaultAxesFontSize',12);
 h(1)=plot(390:780,dispspd5,'Color',[0.25,0.25,0.25],'LineWidth',2);
@@ -266,9 +219,9 @@ fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, '..\plots\fig1i.pdf','-dpdf');
+print(fig, '..\plots\fig1g.pdf','-dpdf');
 
-%% plot Fig 1j - rod and mel responses to real-world spectrum and display spectrum
+%% plot Fig 1h - cone, rod and mel responses to real-world spectrum and display spectrum
 
 fig = figure('defaultAxesFontSize',12);
 b = bar([lmsriworldSpd'; lmsri5PDisp']','LineWidth',1.5);
@@ -298,7 +251,7 @@ fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, '..\plots\fig1j.pdf','-dpdf');
+print(fig, '..\plots\fig1h.pdf','-dpdf');
 
 %%
 clear all;
