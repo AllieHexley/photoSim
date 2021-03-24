@@ -46,6 +46,7 @@ cct = [4000, 5000, 5500, 6000, 6500, 7000, 7500, 8000, 9000, 10000, 11000, 12000
 DL = zeros(81, length(cct));
 DLmbCoords = zeros(5, length(cct));
 DLmb = zeros(3, length(cct));
+load('B_cieday.mat');
 for i=1:length(cct)
     DL = GenerateCIEDay(cct(i), B_cieday);
     A = trapz(380:5:780, DL);
