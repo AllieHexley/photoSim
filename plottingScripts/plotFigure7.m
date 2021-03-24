@@ -10,7 +10,7 @@ clc;
      
 %% load relevant data file
 
-load('C:\Users\ahexley\Documents\Experiments\photoSim\photosimMetrics_ReproduceLMS.mat');
+load('photosimMetrics_ReproduceLMS.mat');
 
 % set up colours
 CRTcol = [0,0,0];

@@ -7,6 +7,9 @@ close all;
 clc;
 addpath('data');
 addpath('functions');
+if ~exist('plots');
+    mkdir('plots');
+end
 addpath(genpath(pwd));
 
 %% load in photoreceptor signals

@@ -9,6 +9,9 @@ close all;
 clc;
 addpath('data');
 addpath('functions');
+if ~exist('plots');
+    mkdir('plots');
+end
 addpath(genpath(pwd));
 
 %% check if file already exists, and ask user if they want to re-run simulation
