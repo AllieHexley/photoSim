@@ -57,16 +57,11 @@ for i=1:length(cct)
     DLmb(3,i) = DLmbCoords(5,i)./(DLmbCoords(2,i)+DLmbCoords(3,i));
 end
 
-% set up colors
-map=colormap(colorcet('rainbow'));
-map2=colormap(colorcet('bjy'));
-
 %% plot fig3a - Smb vs Lmb
 
 fig = figure('defaultAxesFontSize',12);
 hold on;
 h(1)=plot(SL.mb(2,:),SL.mb(1,:),'Color','k','LineWidth',2);
-
 for i = [11,36,61,97,111,136,161,197,211,236,261,297,311,336,361] % mark on spectral locus crosses for each 25nm step
     plot(SL.mb(2,i),SL.mb(1,i),'x','Color',map(round(256*i/391),:),'MarkerSize',8,'LineWidth',2);
 end
