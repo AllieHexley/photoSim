@@ -9,7 +9,7 @@ close all;
 clc;
 addpath('data');
 addpath('functions');
-if ~exist('plots');
+if ~exist([pwd '/plots'],'dir');
     mkdir('plots');
 end
 addpath(genpath(pwd));

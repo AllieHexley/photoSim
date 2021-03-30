@@ -1,11 +1,19 @@
 % README
 % Created by ACH 21/10/2020
 
+%% Instructions for running the photosim toolbox %%%
+
 To run the photosim toolbox, you need to first simulate your reference database, which you can do by running simulateReferenceDatabase.m first.
 You then need to run the metrics to compare the displays to the real-world spectra, which you do by running runMetrics.m
 You can visualize the results by running the plotting scripts. The component functions can be found in the functions folder.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 Note you must have Psychtoolbox installed and on your path in order to run this toolbox.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% List of scripts, data files, functions, and plotting scripts in the photosim toolbox
 
 Simulations:
 - simulateReferenceDatabase: (first script to run) Generate real-world spectra, display spectra, and calculate photoreceptor excitations and MacLeod-Boynton coorindates from real-world spectra
