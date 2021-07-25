@@ -3,6 +3,8 @@
 
 %% Instructions for running the photosim toolbox %%%
 
+Preprint code release: 10.5281/zenodo.5136533
+
 To run the photosim toolbox, you need to first simulate your reference database, which you can do by running simulateReferenceDatabase.m first.
 You then need to run the metrics to compare the displays to the real-world spectra, which you do by running runMetrics.m
 You can visualize the results by running the plotting scripts. The component functions can be found in the functions folder.
