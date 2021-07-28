@@ -20,9 +20,9 @@ ifReproducible = display.ssReproducible;
 withinTolerance = (display.ssDistorted+(display.ssDistorted*0.01)) >= Sim.ss & (display.ssDistorted-(display.ssDistorted*0.01)) <= Sim.ss; % to 1% tolerance
 ifWithinTolerance = (sum(withinTolerance(:,:))==5);
 % check if within tolerance and reproducible
-try
+if size(ifReproducible,1) == size(ifWithinTolerance,1)
     ifMatch = ifWithinTolerance+ifReproducible;
-catch % catch if the arrays are transposed
+else % catch if the arrays are transposed
     ifMatch = ifWithinTolerance+ifReproducible';
 end
 %ifMatch = ifWithinTolerance == 1 & sum(display.ssReproducible(:,1)

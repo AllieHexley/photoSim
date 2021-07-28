@@ -81,7 +81,7 @@ print(fig, '..\supplementary_plots\figS1c.pdf','-dpdf');
 
 %% and bar graph for chromaticity and SMLRI reproduction
 fig = figure('defaultAxesFontSize',12);
-b = bar([Man.chromaticityReproductionMetric,Man.realworldReproductionMetric;MPHDR.chromaticityReproductionMetric,MPHDR.realworldReproductionMetric(1)],'LineWidth',1.5);
+b = bar([Man.chromaticityReproductionMetric,Man.realworldReproductionMetric;MPHDR.chromaticityReproductionMetric,MPHDR.realworldReproductionMetric],'LineWidth',1.5);
 b(1).FaceColor='flat'
 b(1).CData = [1,0.563,0]
 b(2).FaceColor='flat'
