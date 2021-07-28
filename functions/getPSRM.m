@@ -20,7 +20,11 @@ ifReproducible = display.ssReproducible;
 withinTolerance = (display.ssDistorted+(display.ssDistorted*0.01)) >= Sim.ss & (display.ssDistorted-(display.ssDistorted*0.01)) <= Sim.ss; % to 1% tolerance
 ifWithinTolerance = (sum(withinTolerance(:,:))==5);
 % check if within tolerance and reproducible
-ifMatch = ifWithinTolerance+ifReproducible;
+try
+    ifMatch = ifWithinTolerance+ifReproducible;
+catch % catch if the arrays are transposed
+    ifMatch = ifWithinTolerance+ifReproducible';
+end
 %ifMatch = ifWithinTolerance == 1 & sum(display.ssReproducible(:,1)
 display.realworldReproductionMetric = 100.*(sum(ifMatch==2)./totalSpec);
 
