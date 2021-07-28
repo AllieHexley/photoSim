@@ -9,11 +9,11 @@ clc;
      
 %% load relevant data file
 
-load('supplementary_data/MPHDR.mat');
-manchester = readtable('supplementary_data/Manchester_5Primary.xlsx');
+load('..\supplementary_data/MPHDR.mat');
+manchester = readtable('..\supplementary_data/Manchester_5Primary.xlsx');
 manchester_primaries = table2array(manchester(:,2:6));
 manchester_wls = table2array(manchester(:,1));
-load('photosimMetrics_ReproduceLMSRI.mat');
+load('..\photosimMetrics_ReproduceLMSRI.mat');
 
 %% plot primaries for Manchester display
 
@@ -37,7 +37,7 @@ fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, 'supplementary_plots\figS1a.pdf','-dpdf');
+print(fig, '..\supplementary_plots\figS1a.pdf','-dpdf');
 
 %% plot primaries for MPHDR
 
@@ -62,7 +62,7 @@ fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, 'supplementary_plots\figS1b.pdf','-dpdf');
+print(fig, '..\supplementary_plots\figS1b.pdf','-dpdf');
 
 %% and plot the gamuts for these displays
 fig = figure('defaultAxesFontSize',12);
@@ -77,17 +77,17 @@ fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, 'supplementary_plots\figS1c.pdf','-dpdf');
+print(fig, '..\supplementary_plots\figS1c.pdf','-dpdf');
 
 %% and bar graph for chromaticity and SMLRI reproduction
 fig = figure('defaultAxesFontSize',12);
-b = bar([Man.chromaticityReproductionMetric,Man.realworldReproductionMetric;MPHDR.chromaticityReproductionMetric,MPHDR.realworldReproductionMetric],'LineWidth',1.5);
+b = bar([Man.chromaticityReproductionMetric,Man.realworldReproductionMetric;MPHDR.chromaticityReproductionMetric,MPHDR.realworldReproductionMetric(1)],'LineWidth',1.5);
 b(1).FaceColor='flat'
-b(1).CData = [0.3,0,0.6]
+b(1).CData = [1,0.563,0]
 b(2).FaceColor='flat'
-b(2).CData = [0.6,0,0.3]
+b(2).CData = [0,1,0.813]
 xticklabels({'5P-VDU','MPHDR'});
-%legend('Chromaticity','PSRM');
+legend('Chromaticity','PSRM');
 xlim([0.5,2.5]);
 xtickangle(45);
 ylabel('Reproduction (%)');
@@ -99,7 +99,7 @@ fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, 'supplementary_plots\figS1d.pdf','-dpdf');
+print(fig, '..\supplementary_plots\figS1d_legend.pdf','-dpdf');
 
 %%
 function h = plotChromaticityReproduction(display,col);

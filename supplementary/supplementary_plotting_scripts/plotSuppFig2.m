@@ -9,7 +9,7 @@ clc;
      
 %% load relevant data file
 
-load('photosimSuppMetrics_ReproduceLMSRI.mat');
+load('..\photosimSuppMetrics_ReproduceLMSRI.mat');
 
 %% plot distorted MacLeod-Boynton colour space for the five primary displays
 
@@ -72,7 +72,7 @@ fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, ['supplementary_plots/SF3' fignum 'i.pdf'],'-dpdf');
+print(fig, ['..\supplementary_plots/SF3' fignum 'i.pdf'],'-dpdf');
 
 %% second projection
 lStep = 0.003;
@@ -116,7 +116,7 @@ fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, ['supplementary_plots/SF3' fignum 'ii.pdf'],'-dpdf');
+print(fig, ['..\supplementary_plots/SF3' fignum 'ii.pdf'],'-dpdf');
 
 %% third projection
 sStep = 0.001;
@@ -158,7 +158,7 @@ fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, ['supplementary_plots/SF3' fignum 'iii.pdf'],'-dpdf');
+print(fig, ['..\supplementary_plots/SF3' fignum 'iii.pdf'],'-dpdf');
 
 end
 

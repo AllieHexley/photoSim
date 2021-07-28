@@ -1,4 +1,4 @@
-% plot Figure 6 of paper
+% plot Supplementary Fig 3
 % plots distortions plot note
 % i = CRT, ii=LCD, iii=DP
 % created by ACH 01/07/2020
@@ -25,7 +25,7 @@ fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,1.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 1];
-print(fig, 'supplementary_plots/figS2ai.pdf','-dpdf');
+print(fig, '..\supplementary_plots/figS2ai.pdf','-dpdf');
 
 %% plot fig7aii - DP Rod boxplot
 
@@ -35,7 +35,7 @@ fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,1.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 1];
-print(fig, 'supplementary_plots/figS2aii.pdf','-dpdf');
+print(fig, '..\supplementary_plots/figS2aii.pdf','-dpdf');
 
 %% plot fig7bi - CRT Rod
 
@@ -45,7 +45,7 @@ fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, 'supplementary_plots/figS2bi.pdf','-dpdf');
+print(fig, '..\supplementary_plots/figS2bi.pdf','-dpdf');
 
 %% plot fig7bii - DP Rod
 
@@ -55,7 +55,7 @@ fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, 'supplementary_plots/figS2bii.pdf','-dpdf');
+print(fig, '..\supplementary_plots/figS2bii.pdf','-dpdf');
 
 %% plot fig7ci - CRT boxplot mel
 
@@ -65,7 +65,7 @@ fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,1.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 1];
-print(fig, 'supplementary_plots/figS2ci.pdf','-dpdf');
+print(fig, '..\supplementary_plots/figS2ci.pdf','-dpdf');
 
 %% plot fig7cii - DP mel boxplot
 
@@ -75,7 +75,7 @@ fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,1.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 1];
-print(fig, 'supplementary_plots/figS2cii.pdf','-dpdf');
+print(fig, '..\supplementary_plots/figS2cii.pdf','-dpdf');
 
 %% plot fig7di - CRT Rod
 
@@ -85,7 +85,7 @@ fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, '..\plots\fig6fi.pdf','-dpdf');
+print(fig, '..\supplementary_plots/figS2di.pdf','-dpdf');
 
 %% plot fig7dii - DP Mel
 
@@ -95,7 +95,7 @@ fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, '..\plots\fig6fiii.pdf','-dpdf');
+print(fig, '..\supplementary_plots/figS2dii.pdf','-dpdf');
 %%
 clear all;
 
