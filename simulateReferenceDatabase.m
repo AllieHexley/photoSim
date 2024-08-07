@@ -18,7 +18,7 @@ addpath(genpath(pwd));
 
 if exist('photosimReferenceDatabase.mat') == 2
     % if file exists, ask user if they just want to load in file
-    resimulate = input('Do you want to re-run the simulation (y/n)? ','s');
+    resimulate = input('Do you want to re-run the simulation for the 99 reflectances and 401 illumiants(y/n)? ','s');
 else
     % if the file doesn't exist, simulate
     resimulate ='y'
@@ -35,6 +35,8 @@ if resimulate == 'y'
     % Get the CIE 2015 10degree XYZ functions
     T_xyz = csvread('data/lin2012xyz10e_1_7sf.csv');
     wls_xyz = T_xyz(:, 1);
+    T_xyz_M = 683*T_xyz(wls_xyz >= 400 & wls_xyz <= 699, 2:end)';
+    wls_xyz_M = wls_xyz(wls_xyz >= 400 & wls_xyz <= 699, 1);
     T_xyz = 683*T_xyz(wls_xyz >= 390 & wls_xyz <= 780, 2:end)';
     wls_xyz = wls_xyz(wls_xyz >= 390 & wls_xyz <= 780, 1);
     wls_xyz = [];
@@ -121,6 +123,44 @@ if resimulate == 'y'
     xyYbb5p = XYZToxyY(T_xyz*rgbcmbb5p);
     idxbb5p = convhull(xyYbb5p(1,:), xyYbb5p(2,:));
     
+     %% and load in the primaries for Oxford MPHDR display
+    mphdr = load('MPHDR.mat');
+    wls_mphdr = mphdr.wls;
+    rgbcmMPHDR = mphdr.mphdrRGBCMY(wls_mphdr >= 390 & wls_mphdr <= 780, 1:end);
+    
+    % calculate xyY coordinates of each individual primary on max
+    xyYMPHDR = XYZToxyY(T_xyz*rgbcmMPHDR);
+    idxMPHDR = convhull(xyYMPHDR(1,:), xyYMPHDR(2,:));
+    
+    % Get the photoreceptor spectral sensitivities
+    % S, M, L, Rod, Mel
+    % convert to 400-700nm range!
+    ss = GetCIES026;
+    wlsCIES026_M = (400:1:699)';
+    T_cies026_M = ss(:,11:310);
+    T_cies026_M(isnan(T_cies026_M)) = 0;
+    
+    %% and load in the Nugent Zele system
+    nz = readtable('NugentZeleSystemSpectra.xlsx');
+    wls_nz = nz.Wavelength;
+    rgbcm_finespace = [nz.Violet(wls_nz>=390 & wls_nz<=780),nz.Cyan(wls_nz>=390 & wls_nz<=780),nz.Green(wls_nz>=390 & wls_nz<=780),nz.Amber(wls_nz>=390 & wls_nz<=780),nz.Red(wls_nz>=390 & wls_nz<=780)];
+    rgbcmNZ = rgbcm_finespace(1:4:length(rgbcm_finespace),:);
+    
+    xyYNZ = XYZToxyY(T_xyz*rgbcmNZ);
+    idxNZ = convhull(xyYNZ(1,:), xyYNZ(2,:));
+    
+    %% load in the primaries for the Manchester 5 primary display
+    manchester = readtable('Manchester_5Primary.xlsx');
+    manchester_primaries = table2array(manchester(:,2:6));
+    manchester_wls = table2array(manchester(:,1));
+    
+    wlsMan = manchester_wls(:,1);
+    rgbcmMan = manchester_primaries(manchester_wls >= 390 & manchester_wls <= 780, 1:end);
+    
+    % calculate xyY coordinates of each individual primary on max 
+    xyYMan = XYZToxyY(T_xyz_M*rgbcmMan);
+    idxMan = convhull(xyYMan(1,:), xyYMan(2,:));
+    
     %% get spectral and daylight locus
     
     slRad = getSpectralLocusSpectra(390:780); % get spectral locus from 390:780
@@ -200,7 +240,9 @@ if resimulate == 'y'
     correlationLabels = pairNames;
     
     %% save output
-    
+    NZ = struct('xyYMax', xyYNZ, 'idx', idxNZ, 'spd', rgbcmNZ);
+    Man = struct('xyYMax', xyYMan, 'idx', idxMan, 'spd', rgbcmMan);
+    MPHDR = struct('xyYMax', xyYMPHDR, 'idx', idxMPHDR, 'spd', rgbcmMPHDR);
     CRT = struct('xyYMax', xyYCRT, 'idx', idxCRT, 'spd', rgbCRT);
     DP = struct('xyYMax', xyYDP, 'idx', idxDP, 'spd', rgbDP);
     LCD = struct('xyYMax', xyYLCD, 'idx', idxLCD, 'spd', rgbLCD);
@@ -209,7 +251,7 @@ if resimulate == 'y'
     Sim = struct('xyY', xyYSim, 'ss', ssSim, 'mb', mbSim, 'photoreceptorCorrelations', photoreceptorCorrelations, 'correlationLabels', correlationLabels);
     SL = struct('xyY', xyYSL, 'idx', idxSL, 'ss', ssSL, 'mb', mbSL);
     
-    save('photosimReferenceDatabase.mat','CRT','DP','LCD','nb5p','bb5p','Sim','SL');
+    save('photosimReferenceDatabase.mat','NZ','CRT','DP','LCD','nb5p','bb5p','Sim','SL','Man','MPHDR');
     
     % clear messy variables
     clear all;

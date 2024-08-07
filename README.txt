@@ -39,7 +39,7 @@ arXiv:1509.03700 [cs.GR] 2015)
 -normIllSpd: Normalize illuminant spectra to habe unit area
 -XYZToxyY: Convert CIE 2015 XYZ coordinates to CIE xyY chromaticity coordinates (http://psychtoolbox.org/docs/XYZToxyY)
 -GetCIES026: Return CIE026 spectral sensitivity functions (https://github.com/spitschan/SilentSubstitutionToolbox/blob/master/PhotoreceptorSensitivity/GetCIES026.m)
--getDistortions: Calculate distortions introduced to each photoreceptor signal when you constrain reproduction on a 3-primary display
+-getDistortions: Calculate distortions introduced to each photoreceptor signal when you constrain reproduction on a 3-primary display. This does not account for the tolerance of reproduction, but simply if the reproduction needs non-negative non-zero primaries.
 -getColourGamut: Return % of real-world chromaticities that can be displayed in gamut for each display
 -getPSRM: Return photoreceptor reproduction metric, PSRM, i.e. % of real-world (undistorted) LMSRI quintuplets that can be reproduced by a display (to a specified degree of accuracy)
 -getPSDM: Return photoreceptor distortion metric, PSDM, for each display

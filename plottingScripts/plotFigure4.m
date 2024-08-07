@@ -1,5 +1,5 @@
 % plot Figure 4 of paper
-% plots primaries of displays used
+% plots real-world and chromaticity reproduction plots
 % created by ACH 01/07/2020
 
 %% load data
@@ -11,95 +11,90 @@ clc;
 
 load('photosimMetrics_ReproduceLMS.mat');
 
-%% plot Fig3a - CRT primaries
+%% plot fig5a - Chromaticity diagram % capture
 
 fig = figure('defaultAxesFontSize',12);
-plotDisplayPrimaries(CRT)
+plotChromaticity();
+hold on;
+plot(Sim.xyY(1,:),Sim.xyY(2,:),'w.');
+h(1)=plotChromaticityReproduction(CRT,[0,0,0]);
+h(2)=plotChromaticityReproduction(LCD,[0.8,0.8,0.8]);
+h(3)=plotChromaticityReproduction(DP,[0.3,0.3,0.2]);
+h(4)=plotChromaticityReproduction(nb5p,[0,0.8,0.8]);
+h(5)=plotChromaticityReproduction(bb5p,[0.5,0.5,0.8]);
+h(6) = plotChromaticityReproduction(Man,[0.2,0.8,0.2]);
+h(7) = plotChromaticityReproduction(MPHDR,[0.2,0.2,0.8]);
+h(8) = plotChromaticityReproduction(NZ,[0.8,0.8,0.2]);
+xlabel('CIE x'); ylabel('CIE y');
+%legend(h,{'CRT','LCD','Display++','Narrowband 5P', 'Broadband 5P','Manchester VDU','RealVision MPHDR','Nugent-Zele'});
 fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, '..\plots\fig4a.pdf','-dpdf');
+print(fig, '..\plots\fig5a.png','-dpng');
 
-%% plot Fig3b -  Dell LCD primaries
+%% plot fig5b - Reproduction of chromaticity bar graph
 
 fig = figure('defaultAxesFontSize',12);
-plotDisplayPrimaries(LCD)
+b = bar([CRT.chromaticityReproductionMetric,LCD.chromaticityReproductionMetric,DP.chromaticityReproductionMetric,Man.chromaticityReproductionMetric,MPHDR.chromaticityReproductionMetric,NZ.chromaticityReproductionMetric,nb5p.chromaticityReproductionMetric,bb5p.chromaticityReproductionMetric],'LineWidth',1.5);
+b.FaceColor='flat'
+b.CData(1,:) = [0.3,0,0.6]
+b.CData(2,:) = [0.3,0,0.6]
+b.CData(3,:) = [0.3,0,0.6]
+b.CData(4,:) = [0.6,0,0.3]
+b.CData(5,:) = [0.6,0,0.3]
+b.CData(6,:) = [0.6,0,0.3]
+b.CData(7,:) = [0.6,0,0.3]
+b.CData(8,:) = [0.6,0,0.3]
+xticklabels({'CRT','Dell LCD','Display++','Manchester VDU','Realvision MPHDR', 'Nugent-Zele', 'NB 5P', 'BB 5P'});
+xlim([0.5,8.5]);
+xtickangle(45);
+ylabel('Chromaticity Reproduction (%)');
+ylim([0,104]);
+axis square
+grid on;
+box on;
 fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, '..\plots\fig4b.pdf','-dpdf');
+print(fig, '..\plots\fig5b.pdf','-dpdf');
 
-%% plot Fig3c - Display++ primaries
+%% plot fig5c - Reproduction of full photoreceptor signals bar graph
 
 fig = figure('defaultAxesFontSize',12);
-plotDisplayPrimaries(DP)
+b = bar([CRT.realworldReproductionMetric,LCD.realworldReproductionMetric,DP.realworldReproductionMetric,Man.realworldReproductionMetric,MPHDR.realworldReproductionMetric,NZ.realworldReproductionMetric,nb5p.realworldReproductionMetric,bb5p.realworldReproductionMetric],'LineWidth',1.5);
+b.FaceColor='flat'
+b.CData(1,:) = [0.3,0,0.6]
+b.CData(2,:) = [0.3,0,0.6]
+b.CData(3,:) = [0.3,0,0.6]
+b.CData(4,:) = [0.6,0,0.3]
+b.CData(5,:) = [0.6,0,0.3]
+b.CData(6,:) = [0.6,0,0.3]
+b.CData(7,:) = [0.6,0,0.3]
+b.CData(8,:) = [0.6,0,0.3]
+xticklabels({'CRT','Dell LCD','Display++','Manchester VDU','Realvision MPHDR', 'Nugent-Zele', 'NB 5P', 'BB 5P'});
+xlim([0.5,8.5]);
+xtickangle(45);
+ylabel('PSRM (%)');
+ylim([0,104]);
+axis square
+grid on;
+box on;
 fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, '..\plots\fig4c.pdf','-dpdf');
-
-%% plot Fig3d - Broadband five primary primaries
-
-fig = figure('defaultAxesFontSize',12);
-plotDisplayPrimariesMultiPrimary(nb5p)
-fig.PaperUnits = 'inches';
-fig.PaperSize = [3.1,3.1];
-fig.PaperPositionMode = 'manual';
-fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, '..\plots\fig4d.pdf','-dpdf');
-
-%% plot Fig3e - Narrowband five primary primaries
-
-fig = figure('defaultAxesFontSize',12);
-plotDisplayPrimariesMultiPrimary(bb5p)
-fig.PaperUnits = 'inches';
-fig.PaperSize = [3.1,3.1];
-fig.PaperPositionMode = 'manual';
-fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, '..\plots\fig4e.pdf','-dpdf');
+print(fig, '..\plots\fig5c.pdf','-dpdf');
 
 %%
 clear all;
 
 %% functions
 
-function plotDisplayPrimaries(display)
+function h = plotChromaticityReproduction(display,col);
 
 hold on;
-h(1)=plot(390:780,display.spd(:,1),'Color',[0.5,0,0],'LineWidth',2);
-h(2)=plot(390:780,display.spd(:,2),'Color',[0,0.5,0],'LineWidth',2);
-h(3)=plot(390:780,display.spd(:,3),'Color',[0,0,0.5],'LineWidth',2);
-xlabel('Wavelength (nm)');
-ylabel('Relative Power');
-yticklabels({});
-xticks([400,500,600,700]);
-xticklabels({'400','500','600','700'});
-xlim([390,780]);
-axis square
-grid on;
-box on;
-
-end
-
-function plotDisplayPrimariesMultiPrimary(display)
-
-hold on;
-h(1)=plot(390:780,display.spd(:,5),'Color',[0.5,0,0],'LineWidth',2);
-h(2)=plot(390:780,display.spd(:,3),'Color',[0,0.5,0],'LineWidth',2);
-h(3)=plot(390:780,display.spd(:,2),'Color',[0,0,0.5],'LineWidth',2);
-h(3)=plot(390:780,display.spd(:,1),'Color',[0.4940,0.1840,0.5560],'LineWidth',2);
-h(3)=plot(390:780,display.spd(:,4),'Color',[0.9290,0.6940,0.1250],'LineWidth',2);
-xlabel('Wavelength (nm)');
-ylabel('Relative Power');
-yticklabels({});
-xticks([400,500,600,700]);
-xticklabels({'400','500','600','700'});
-xlim([390,780]);
-axis square
-grid on;
-box on;
+h=plot(display.xyYMax(1,display.idx),display.xyYMax(2,display.idx),'Color',col,'LineWidth',2);
 
 end

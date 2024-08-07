@@ -37,7 +37,7 @@ fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, '..\plots\fig1a.pdf','-dpdf');
+%print(fig, '..\plots\fig1a.pdf','-dpdf');
 
 %%  plot Fig1b - example real-world spectrum
 
@@ -60,7 +60,7 @@ fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, '..\plots\fig1b.pdf','-dpdf');
+%print(fig, '..\plots\fig1b.pdf','-dpdf');
 
 %%  plot Fig1c - example three primary display primaries
 
@@ -95,7 +95,7 @@ fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, '..\plots\fig1c.pdf','-dpdf');
+%print(fig, '..\plots\fig1c.pdf','-dpdf');
 
 %% calculate cone, rod, and melanopsin responses to worldSpd and display
 lmsworldSpd = T_cies026(1:3,:)*worldSpd; % lms from worldSpd
@@ -122,7 +122,7 @@ fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, '..\plots\fig1d.pdf','-dpdf');
+%print(fig, '..\plots\fig1d.pdf','-dpdf');
 
 %% Fig 1e - cone, rod, and melanopsin responses to real-world spectrum and display spectrum
 
@@ -154,7 +154,7 @@ fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, '..\plots\fig1e.pdf','-dpdf');
+%print(fig, '..\plots\fig1e.pdf','-dpdf');
 
 %%  plot Fig1f - example five primary display primaries
 
@@ -193,7 +193,7 @@ fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, '..\plots\fig1f.pdf','-dpdf');
+%print(fig, '..\plots\fig1f.pdf','-dpdf');
 
 %% calculate cone, rod, and melanopsin responses to five primary display display
 lmsriworldSpd = T_cies026*worldSpd; % lms from worldSpd
@@ -219,7 +219,7 @@ fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, '..\plots\fig1g.pdf','-dpdf');
+%print(fig, '..\plots\fig1g.pdf','-dpdf');
 
 %% plot Fig 1h - cone, rod and mel responses to real-world spectrum and display spectrum
 
@@ -252,7 +252,73 @@ fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, '..\plots\fig1h.pdf','-dpdf');
+%print(fig, '..\plots\fig1h.pdf','-dpdf');
+
+%% plot Fig 1i - contrasts
+
+fig = figure('defaultAxesFontSize',12);
+contrasts = 100*[abs(lmsri3PDisp(4:5)'-lmsriworldSpd(4:5)')./lmsriworldSpd(4:5)']';
+b = bar(contrasts,'LineWidth',1.5);
+b(1,1).FaceColor = 'flat';
+b(1,1).FaceColor = 'flat';
+b(1,1).EdgeColor = [0 0 0];
+% b(1,1).CData(3,:) = [.5 0 0];
+% b(1,1).CData(2,:) = [0 .5 0];
+% b(1,1).CData(1,:) = [0 0 .5];
+b(1,1).CData(1,:) = rCol;
+b(1,1).CData(2,:) = iCol;
+% b(1,2).FaceColor = 'flat';
+% b(1,2).EdgeColor = [0 0 0];
+% b(1,2).CData(3,:) = 1.75*[.5 0 0];
+% b(1,2).CData(2,:) = 1.75*[0 .5 0];
+% b(1,2).CData(1,:) = 1.75*[0 0 .5];
+% b(1,2).CData(4,:) = 1.75*rCol;
+% b(1,2).CData(5,:) = 1.75*iCol;
+xticklabels({'R','I'});
+xlim([0.5,2.5]);
+ylabel('Contrast (%)');
+ylim([0,25]);
+%yticklabels({});
+axis square
+grid on;
+box on;
+fig.PaperUnits = 'inches';
+fig.PaperSize = [1.1,3.1];
+fig.PaperPositionMode = 'manual';
+fig.PaperPosition=[0.1 0.1 1 3];
+print(fig, '..\plots\fig1i.pdf','-dpdf');
+
+%%
+fig = figure('defaultAxesFontSize',12);
+b = bar(100*[abs(lmsri5PDisp(4:5)'-lmsriworldSpd(4:5)')./lmsriworldSpd(4:5)']','LineWidth',1.5);
+b(1,1).FaceColor = 'flat';
+b(1,1).FaceColor = 'flat';
+b(1,1).EdgeColor = [0 0 0];
+b(1,1).CData(3,:) = [.5 0 0];
+b(1,1).CData(2,:) = [0 .5 0];
+b(1,1).CData(1,:) = [0 0 .5];
+b(1,1).CData(4,:) = rCol;
+b(1,1).CData(5,:) = iCol;
+% b(1,2).FaceColor = 'flat';
+% b(1,2).EdgeColor = [0 0 0];
+% b(1,2).CData(3,:) = 1.75*[.5 0 0];
+% b(1,2).CData(2,:) = 1.75*[0 .5 0];
+% b(1,2).CData(1,:) = 1.75*[0 0 .5];
+% b(1,2).CData(4,:) = 1.75*rCol;
+% b(1,2).CData(5,:) = 1.75*iCol;
+xticklabels({'S','M','L','R','I'});
+xlim([0.5,5.5]);
+ylabel('Contrast (%)');
+ylim([0,25]);
+%yticklabels({});
+axis square
+grid on;
+box on;
+fig.PaperUnits = 'inches';
+fig.PaperSize = [3.1,3.1];
+fig.PaperPositionMode = 'manual';
+fig.PaperPosition=[0.1 0.1 3 3];
+print(fig, '..\plots\fig1j.pdf','-dpdf');
 
 %%
 clear all;

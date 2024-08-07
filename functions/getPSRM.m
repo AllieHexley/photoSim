@@ -13,7 +13,7 @@ function [display] = getPSRM(display,Sim);
 
 % calculate what percentage of simulated real-world spectra can be
 % reproduced on the display
-totalSpec = 39699;
+totalSpec = length(Sim.ss);
 % check if reproducible (e.g. primaries are non zero and non negative)
 ifReproducible = display.ssReproducible;
 % check if within 1% of error for each signal

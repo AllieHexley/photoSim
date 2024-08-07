@@ -1,4 +1,4 @@
-% plot Figure 6 of paper
+% plot Figure 6
 % plots distortions plot note
 % i = CRT, ii=LCD, iii=DP
 % created by ACH 01/07/2020
@@ -10,93 +10,92 @@ clc;
      
 %% load relevant data file
 
-load('photosimMetrics_ReproduceLMS.mat');
+load('../photosimMetrics_ReproduceLMS.mat');
 
 % set up colours
 CRTcol = [0,0,0];
 LCDcol = [0.2,0.2,0.2];
 DPcol = [0.6,0.6,0.6];
 
-%% plot fig6ai - plot full LCD distortion for Rods as an example
+%% plot fig7ai - CRT boxplot Rod
 
 fig = figure('defaultAxesFontSize',12);
-plotDistortions(LCD,4,Sim,LCDcol,'A_R','A_R^*')
-fig.PaperUnits = 'inches';
-fig.PaperSize = [3.1,3.1];
-fig.PaperPositionMode = 'manual';
-fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, '..\plots\fig6ai.pdf','-dpdf');
-
-%% plot fig6aii - and for Mel
-
-fig = figure('defaultAxesFontSize',12);
-plotDistortions(LCD,5,Sim,LCDcol,'A_I','A_I^*')
-fig.PaperUnits = 'inches';
-fig.PaperSize = [3.1,3.1];
-fig.PaperPositionMode = 'manual';
-fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, '..\plots\fig6aii.pdf','-dpdf');
-
-%% plot fig6bi - LCD boxplot Rod
-
-fig = figure('defaultAxesFontSize',12);
-plotBoxplots(LCD,4,'PSDM_R (%)')
+plotBoxplots(CRT,4,'PSDM_R (%)')
 fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,1.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 1];
-print(fig, '..\plots\fig6bi.pdf','-dpdf');
+print(fig, '..\supplementary_plots/figS2ai.pdf','-dpdf');
 
-%% plot fig6bii - LCD boxplot mel
+%% plot fig7aii - DP Rod boxplot
 
 fig = figure('defaultAxesFontSize',12);
-plotBoxplots(LCD,5,'PSDM_I (%)')
+plotBoxplots(DP,4,'PSDM_R (%)')
 fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,1.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 1];
-print(fig, '..\plots\fig6bii.pdf','-dpdf');
+print(fig, '..\supplementary_plots/figS2aii.pdf','-dpdf');
 
-%% plot fig6ci - LCD xy distortions Rod
+%% plot fig7bi - CRT Rod
 
 fig = figure('defaultAxesFontSize',12);
-h = plotDistortionsOverxy(LCD,Sim,4,'PSDM_R (%)');
+h = plotDistortionsOverxy(CRT,Sim,4,'PSDM_R (%)');
 fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, '..\plots\fig6ci.pdf','-dpdf');
+print(fig, '..\supplementary_plots/figS2bi.pdf','-dpdf');
 
-%% plot fig6cii - LCD xy distortions Mel
+%% plot fig7bii - DP Rod
 
 fig = figure('defaultAxesFontSize',12);
-h = plotDistortionsOverxy(LCD,Sim,5,'PSDM_I (%)');
+h = plotDistortionsOverxy(DP,Sim,4,'PSDM_R (%)');
 fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, '..\plots\fig6cii.pdf','-dpdf');
+print(fig, '..\supplementary_plots/figS2bii.pdf','-dpdf');
 
-%% plot fig6di - LCD MacLeod Boynton Rod
+%% plot fig7ci - CRT boxplot mel
 
 fig = figure('defaultAxesFontSize',12);
-h = plotDistortionsOverMB(LCD,4,'PSDM_R (%)');
+plotBoxplots(CRT,5,'PSDM_I (%)')
+fig.PaperUnits = 'inches';
+fig.PaperSize = [3.1,1.1];
+fig.PaperPositionMode = 'manual';
+fig.PaperPosition=[0.1 0.1 3 1];
+print(fig, '..\supplementary_plots/figS2ci.pdf','-dpdf');
+
+%% plot fig7cii - DP mel boxplot
+
+fig = figure('defaultAxesFontSize',12);
+plotBoxplots(DP,5,'PSDM_I (%)')
+fig.PaperUnits = 'inches';
+fig.PaperSize = [3.1,1.1];
+fig.PaperPositionMode = 'manual';
+fig.PaperPosition=[0.1 0.1 3 1];
+print(fig, '..\supplementary_plots/figS2cii.pdf','-dpdf');
+
+%% plot fig7di - CRT Rod
+
+fig = figure('defaultAxesFontSize',12);
+h = plotDistortionsOverxy(CRT,Sim,5,'PSDM_I (%)');
 fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, '..\plots\fig6di.pdf','-dpdf');
+print(fig, '..\supplementary_plots/figS2di.pdf','-dpdf');
 
-%% plot fig6dii - LCD Macleod Boynton Melanopsin
+%% plot fig7dii - DP Mel
 
 fig = figure('defaultAxesFontSize',12);
-h = plotDistortionsOverMB(LCD,5,'PSDM_I (%)');
+h = plotDistortionsOverxy(DP,Sim,5,'PSDM_I (%)');
 fig.PaperUnits = 'inches';
 fig.PaperSize = [3.1,3.1];
 fig.PaperPositionMode = 'manual';
 fig.PaperPosition=[0.1 0.1 3 3];
-print(fig, '..\plots\fig6dii.pdf','-dpdf');
-
+print(fig, '..\supplementary_plots/figS2dii.pdf','-dpdf');
 %%
 clear all;
 
@@ -130,6 +129,24 @@ ylim([0.9,1.1]);
 %axis square
 box on;
 end
+
+% % plot across chromaticity
+% function h = plotDistortionsOverChromaticity(display,d,lab);
+%     image = reshape(display.meanPhotoreceptorDistortion(d,:,:),[100,100]);
+%     h=imagesc(image');
+%     set(gca,'YDir','normal');
+%     colormap(colorcet('D10'));
+%     c=colorbar;
+%     c.Label.String = lab;
+%     caxis([-60,60]);
+%     xticks(1:10:100);
+%     xticklabels(0:0.1:1);
+%     yticks(1:10:100);
+%     yticklabels(0:0.1:1);
+%     axis square
+%     box on;
+%     grid on;
+% end
 
 function h = plotDistortionsOverxy(display,Sim,d,lab);
 % calculate binned distortions across xy space

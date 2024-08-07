@@ -74,20 +74,20 @@ end
     % for 6-primary displays iterate over all 6 primaries
     if nPrimaries==6
         C = nchoosek([1,2,3,4,5,6],5);
-        reproducible = zeros(39699,6);
+        reproducible = zeros(length(Sim.ss),6);
         for ii=1:length(C)
             spd = displayPrimaries(:,[C(ii,:)]);
             rgb2lms = T_cies026([1,2,3,4,5],:)*spd;
             lms2rgb = inv(rgb2lms);
             rgbcm = lms2rgb * Sim.ss([1,2,3,4,5],:);
-            for i=1:39699
+            for i=1:length(Sim.ss)
                 if sum(round(rgbcm(:,i),2)>=0)==5 | sum((rgbcm(:,i)./max(rgbcm(:,i))))<=smallestBit./2>=6;
                     reproducible(i,ii) = 1;
                 end
             end
         end
         display.ssReproducible = sum(reproducible,2);
-        for i=1:39699
+        for i=1:length(display.ssReproducible)
             if display.ssReproducible(i)>=1;
                 display.ssReproducible(i)=1;
             end

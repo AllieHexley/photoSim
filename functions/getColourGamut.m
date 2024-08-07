@@ -10,7 +10,7 @@ function [display] = getColourGamut(display,Sim);
 % outputs:
 % display structure containing field for chromaticity reproduction metric
 
-totalSpec = 39699;
+totalSpec = length(Sim.ss);
 [in, on] = inpolygon(Sim.xyY(1,:),Sim.xyY(2,:),display.xyYMax(1,display.idx),display.xyYMax(2,display.idx));
 display.chromaticityReproductionMetric=100.*(sum(in)./totalSpec);
 
